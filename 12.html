@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="only light">
+<title>PHERE 投稿アシスタント｜AI勉強会デモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: only light;
+  --plaster:#EFECE5;   /* モルタル・漆喰壁 */
+  --stone:#DEDAD1;
+  --ink:#2B2B28;       /* チャコール */
+  --moss:#736E63;      /* グレージュ */
+  --red:#B5402F;       /* 赤目地タイル */
+  --wood:#C89F6B;      /* ラワン材 */
+  --green:#4A5A42;     /* 枝ものの緑 */
+  --white:#FBFAF7;
+  --serif-en:'Cormorant Garamond',serif;
+  --sans:'Zen Kaku Gothic New',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  html,body{background:#EFECE5 !important;color:#2B2B28 !important}
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--plaster);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.8;letter-spacing:.04em;-webkit-font-smoothing:antialiased}
+button{font-family:var(--sans);cursor:pointer}
+
+.stage{max-width:430px;margin:0 auto;min-height:100svh;background:var(--white);border-left:1px solid var(--stone);border-right:1px solid var(--stone);display:flex;flex-direction:column}
+
+.top{padding:18px 20px 14px;border-bottom:1px solid var(--stone);background:var(--white);position:sticky;top:0;z-index:10}
+.top .brand{display:flex;align-items:baseline;justify-content:space-between}
+.top .logo{font-family:var(--serif-en);font-size:17px;letter-spacing:.42em}
+.top .app{font-size:10px;letter-spacing:.22em;color:var(--moss)}
+.steps{display:flex;gap:6px;margin-top:12px}
+.steps span{flex:1;text-align:center;font-size:10.5px;letter-spacing:.14em;color:#B4B0A4;padding:6px 0;border-bottom:2px solid var(--stone);transition:all .3s}
+.steps span.on{color:var(--ink);border-color:var(--red)}
+.steps span.done{color:var(--moss);border-color:var(--moss)}
+
+.view{display:none;flex:1;flex-direction:column}
+.view.on{display:flex}
+.pad{padding:22px 20px}
+h2{font-weight:500;font-size:16.5px;letter-spacing:.16em}
+.sub{color:var(--moss);font-size:12px;margin-top:6px}
+
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.tile{position:relative;border:1px solid var(--stone);background:var(--plaster);aspect-ratio:1;overflow:hidden;padding:0;transition:transform .25s}
+.tile:active{transform:scale(.97)}
+.tile svg{width:100%;height:100%;display:block}
+.tile .lb{position:absolute;left:0;right:0;bottom:0;background:rgba(251,250,247,.9);font-size:11px;letter-spacing:.16em;padding:6px 0;color:var(--ink)}
+.hint{margin-top:16px;font-size:11px;color:#9A968A;line-height:1.9}
+
+.gen{align-items:center;justify-content:center;text-align:center;flex:1}
+.gen .ph{width:180px;height:180px;border:1px solid var(--stone);background:var(--plaster);margin:0 auto 26px}
+.gen .ph svg{width:100%;height:100%}
+.dots{letter-spacing:.2em;font-size:14px;color:var(--moss)}
+.dots i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--red);margin-left:6px;animation:b 1.2s infinite}
+.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+@keyframes b{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.gen .mini{font-size:10.5px;color:#9A968A;margin-top:14px;letter-spacing:.1em}
+
+.appr .photo{width:110px;height:110px;border:1px solid var(--stone);background:var(--plaster);float:right;margin:0 0 10px 14px}
+.appr .photo svg{width:100%;height:100%}
+.cands{margin-top:14px;clear:both}
+.cand{border:1px solid var(--stone);background:var(--white);padding:13px 14px 11px;margin-bottom:10px;position:relative;transition:border .25s}
+.cand .no{font-size:10px;letter-spacing:.22em;color:var(--moss)}
+.cand p{font-size:13px;white-space:pre-wrap;margin-top:5px;min-height:1.4em}
+.cand.sel{border-color:var(--red);background:#FBF6F2}
+.cand .pick{position:absolute;top:11px;right:11px;font-size:10px;letter-spacing:.16em;border:1px solid var(--stone);background:var(--white);padding:4px 10px}
+.cand.sel .pick{background:var(--red);border-color:var(--red);color:var(--white)}
+.sig{border-left:2px solid var(--stone);padding:8px 12px;margin-top:12px;font-size:11px;color:var(--moss);white-space:pre-wrap;line-height:1.7}
+.sig b{display:block;color:var(--ink);font-weight:500;letter-spacing:.14em;font-size:10px;margin-bottom:4px}
+.dual{display:flex;gap:9px;align-items:flex-start;font-size:12px;margin-top:13px;color:var(--ink);line-height:1.6}
+.dual input{accent-color:var(--red);margin-top:4px}
+.dual small{display:block;font-size:10px;color:#9A968A}
+.refreshb{width:100%;margin-top:2px;padding:11px 0;font-size:11.5px;letter-spacing:.18em;border:1px dashed var(--stone);background:var(--white);color:var(--moss)}
+.refreshb:disabled{color:#C4C0B4;border-color:#E7E4DC}
+.editnote{font-size:10.5px;color:#9A968A;margin-top:10px}
+.btns{display:flex;gap:10px;margin:16px 0 26px}
+.btn{flex:1;padding:14px 0;font-size:13px;letter-spacing:.2em;border:1px solid var(--ink);background:var(--white)}
+.btn.solid{background:var(--ink);color:var(--white)}
+.btn.solid:active{background:var(--red);border-color:var(--red)}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:-60px;background:var(--ink);color:#EFECE5;font-size:12px;letter-spacing:.18em;padding:10px 22px;transition:bottom .5s;z-index:50}
+.toast.on{bottom:28px}
+.prof{padding:22px 20px 16px;border-bottom:1px solid var(--stone)}
+.prof .row{display:flex;align-items:center;gap:16px}
+.avatar{width:64px;height:64px;border-radius:50%;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--serif-en);font-size:11px;letter-spacing:.24em;color:var(--ink);background:var(--plaster)}
+.prof .nm{font-size:14px;font-weight:500;letter-spacing:.1em}
+.prof .st{font-size:11px;color:var(--moss);margin-top:2px}
+.bio{font-size:11.5px;color:var(--moss);margin-top:12px;line-height:1.8}
+.bio b{color:var(--ink);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--stone);border-top:1px solid var(--stone)}
+.cell{position:relative;background:var(--plaster);aspect-ratio:1;padding:0;border:none;overflow:hidden}
+.cell svg{width:100%;height:100%;display:block}
+.cell.new{animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+.cell .badge{position:absolute;top:6px;right:6px;background:var(--red);color:var(--white);font-size:9px;letter-spacing:.14em;padding:2px 7px}
+.reset{margin:22px 20px 30px}
+
+.modal{position:fixed;inset:0;background:rgba(43,43,40,.45);display:none;align-items:flex-end;justify-content:center;z-index:60}
+.modal.on{display:flex}
+.sheet{background:var(--white);width:100%;max-width:430px;max-height:82svh;overflow:auto;border-top:2px solid var(--red)}
+.sheet .img{aspect-ratio:1;background:var(--plaster);border-bottom:1px solid var(--stone)}
+.sheet .img svg{width:100%;height:100%}
+.sheet .body{padding:16px 20px 28px}
+.sheet .who{font-size:12px;font-weight:500;letter-spacing:.12em}
+.sheet .cap{font-size:13px;white-space:pre-wrap;margin-top:8px}
+.sheet .tg{font-size:12px;color:var(--moss);margin-top:10px;line-height:1.8;white-space:pre-wrap}
+.sheet .close{width:100%;padding:13px 0;border:none;border-top:1px solid var(--stone);background:var(--white);font-size:12px;letter-spacing:.24em;color:var(--moss)}
+
+.demo{position:fixed;left:12px;bottom:12px;background:rgba(43,43,40,.82);color:#DDD9CF;font-size:9px;letter-spacing:.2em;padding:5px 10px;border-radius:2px;z-index:40}
+</style>
+</head>
+<body>
+<div class="demo">DEMO — AI勉強会用モック</div>
+
+<div class="stage">
+  <div class="top">
+    <div class="brand"><span class="logo">PHERE</span><span class="app">投稿アシスタント（デモ）</span></div>
+    <div class="steps"><span id="st1" class="on">① 撮る・選ぶ</span><span id="st2">② AIが下書き</span><span id="st3">③ OKで投稿</span></div>
+  </div>
+
+  <div class="view on" id="v1">
+    <div class="pad">
+      <h2>写真を入れるだけ。</h2>
+      <p class="sub">実際の運用では、スマホのGoogleドライブ「PHERE 写真ポスト」に写真を入れるだけです。ここではデモ用の写真をどれか1枚タップしてください。</p>
+      <div class="tiles" id="tiles"></div>
+      <p class="hint">※ 実運用ではお店で撮った本物の写真が入ります。いつもの署名・ハッシュタグの形式は、AIが覚えています。<br>※ これはデモ版です。当日は<b>同じ画面のまま、本物のAIが動く版（17番）</b>を、お二人のスマホでそのままお試しいただけます。</p>
+    </div>
+  </div>
+
+  <div class="view gen" id="v2">
+    <div>
+      <div class="ph" id="genPh"></div>
+      <div class="dots">AIが下書きを作成しています<i></i><i></i><i></i></div>
+      <div class="mini">いまのPHEREの投稿スタイルを学習したAIが、3つの温度で書きます</div>
+    </div>
+  </div>
+
+  <div class="view appr" id="v3">
+    <div class="pad">
+      <h2>読んで、選んで、OKと返すだけ。</h2>
+      <p class="sub">いつもの温度のまま、3つの書き方から選べます。文はタップして直せます。</p>
+      <div class="photo" id="apprPh"></div>
+      <div class="cands" id="cands"></div>
+      <button class="refreshb" id="refresh">↻ 別の3案を出す</button>
+      <div class="sig"><b>すべての案に自動で付きます</b><span id="sigline"></span></div>
+      <label class="dual"><input type="checkbox" id="dualpost" checked><span>ホームページの JOURNAL にも同時掲載する<small>phere-hair.com のブログに、同じ写真と文章が自動投稿されます</small></span></label>
+      <p class="editnote">実運用では、この画面がLINEに届き、「OK」や「2で」と返信するだけになります。（インスタへの実投稿の自動化は段階導入です。仕組みがつながるまでは、できあがった本文をコピーして貼るだけ——約30秒の運用です）</p>
+      <div class="btns">
+        <button class="btn" id="redo">やり直す</button>
+        <button class="btn solid" id="ok">OKと返信して投稿</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="v4">
+    <div class="prof">
+      <div class="row">
+        <div class="avatar">PHERE</div>
+        <div>
+          <div class="nm">phere_hair</div>
+          <div class="st">投稿 <b id="pc">19</b>　・　フォロワー 71</div>
+        </div>
+      </div>
+      <div class="bio"><b>PHERE</b><br>東京都目黒区鷹番3-1-2アーク石田ビル2F<br>営業時間10:00〜20:00　TEL 03-6412-8879<br>ご予約：beauty.hotpepper.jp/slnH000625274</div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="reset"><button class="btn" id="again">最初からもう一度（別の写真で）</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">投稿しました（デモ）</div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="img" id="mImg"></div>
+    <div class="body">
+      <div class="who">phere_hair</div>
+      <div class="cap" id="mCap"></div>
+      <div class="tg" id="mTag"></div>
+    </div>
+    <button class="close" id="mClose">閉じる</button>
+  </div>
+</div>
+
+<script>
+/* ---------- 実店舗の世界観に合わせた線画（モルタル・赤目地タイル・ラワン材） ---------- */
+function svgWrap(inner, tone){
+  var bg = tone===2 ? '#E6E2D9' : tone===3 ? '#EAE8E3' : '#EDE9E1';
+  return '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">'
+   +'<rect width="200" height="200" fill="'+bg+'"/>'
+   +'<rect width="200" height="200" fill="#8A8577" opacity=".05"/>'
+   + inner + '</svg>';
+}
+var ART = {
+  salon: function(t){ return svgWrap(
+    '<path d="M0 26 L200 26 M0 40 L200 40" stroke="#C9C5BA" stroke-width="1.2"/>'
+   +'<rect x="30" y="52" width="62" height="3" fill="#FBFAF7" stroke="#B4B0A4" stroke-width=".8"/>'
+   +'<rect x="116" y="60" width="62" height="3" fill="#FBFAF7" stroke="#B4B0A4" stroke-width=".8"/>'
+   +'<circle cx="86" cy="106" r="9" fill="none" stroke="#2B2B28" stroke-width="2"/>'
+   +'<path d="M66 158 C66 128 106 128 106 158 L104 170 L68 170 Z" fill="none" stroke="#2B2B28" stroke-width="2"/>'
+   +'<circle cx="132" cy="86" r="8" fill="none" stroke="#2B2B28" stroke-width="2"/>'
+   +'<path d="M132 94 L132 140 M132 108 L114 118 M132 140 L126 170 M132 140 L140 170" fill="none" stroke="#2B2B28" stroke-width="2"/>'
+   +'<path d="M20 176 L180 176" stroke="#B4B0A4" stroke-width="1.2"/>', t); },
+  flower: function(t){ return svgWrap(
+    '<rect x="66" y="128" width="68" height="48" fill="#FBFAF7" stroke="#B5402F" stroke-width="1.4"/>'
+   +'<path d="M66 144 L134 144 M66 160 L134 160 M83 128 L83 176 M100 128 L100 176 M117 128 L117 176" stroke="#B5402F" stroke-width="1.1"/>'
+   +'<ellipse cx="100" cy="116" rx="17" ry="14" fill="none" stroke="#7E7A6E" stroke-width="1.6"/>'
+   +'<path d="M100 104 C96 84 84 70 66 60 M100 104 C104 82 116 68 132 56 M100 104 C100 84 98 70 96 54" fill="none" stroke="#4A5A42" stroke-width="1.8"/>'
+   +'<path d="M78 70 L70 64 M84 78 L76 74 M120 66 L128 60 M114 74 L122 70 M96 62 L90 56 M98 72 L92 68" stroke="#4A5A42" stroke-width="1.4"/>', t); },
+  tea: function(t){ return svgWrap(
+    '<path d="M24 152 L176 152 L176 158 L24 158 Z" fill="none" stroke="#C89F6B" stroke-width="1.6"/>'
+   +'<path d="M72 106 L128 106 L122 146 C120 152 114 152 108 152 L92 152 C86 152 80 152 78 146 Z" fill="none" stroke="#2B2B28" stroke-width="2"/>'
+   +'<path d="M128 114 C142 114 144 132 128 138" fill="none" stroke="#2B2B28" stroke-width="1.8"/>'
+   +'<path d="M92 92 C88 82 96 78 92 68 M108 94 C104 84 112 80 108 70" fill="none" stroke="#8A8577" stroke-width="1.4"/>', t); },
+  product: function(t){ return svgWrap(
+    '<path d="M24 166 L176 166 L176 172 L24 172 Z" fill="none" stroke="#C89F6B" stroke-width="1.6"/>'
+   +'<rect x="62" y="82" width="28" height="84" rx="6" fill="none" stroke="#2B2B28" stroke-width="1.8"/>'
+   +'<rect x="70" y="68" width="12" height="14" fill="none" stroke="#2B2B28" stroke-width="1.8"/>'
+   +'<rect x="106" y="94" width="28" height="72" rx="6" fill="none" stroke="#2B2B28" stroke-width="1.8"/>'
+   +'<path d="M112 94 L112 82 L127 82 L127 75 L134 75" fill="none" stroke="#2B2B28" stroke-width="1.8"/>'
+   +'<path d="M68 112 L84 112 M68 120 L84 120" stroke="#8A8577" stroke-width="1.2"/>'
+   +'<path d="M112 124 L128 124 M112 132 L128 132" stroke="#8A8577" stroke-width="1.2"/>', t); },
+  books: function(t){ return svgWrap(
+    '<path d="M20 96 L180 96 L180 102 L20 102 Z M20 168 L180 168 L180 174 L20 174 Z" fill="none" stroke="#C89F6B" stroke-width="1.6"/>'
+   +'<rect x="44" y="40" width="42" height="56" fill="#2B2B28"/>'
+   +'<path d="M52 54 L66 54 M52 62 L78 62 M52 70 L72 70 M52 78 L78 78" stroke="#EFECE5" stroke-width="2.4"/>'
+   +'<rect x="112" y="46" width="40" height="50" fill="none" stroke="#2B2B28" stroke-width="1.8"/>'
+   +'<circle cx="132" cy="66" r="9" fill="none" stroke="#8A8577" stroke-width="1.4"/>'
+   +'<rect x="64" y="118" width="38" height="50" fill="none" stroke="#2B2B28" stroke-width="1.8"/>'
+   +'<path d="M72 156 L94 156" stroke="#B5402F" stroke-width="1.6"/>', t); }
+};
+
+/* ---------- 実投稿のスタイルに準拠した下書きデータ ---------- */
+var SIG = 'PHERE\n\n目黒区鷹番3-1-2アーク石田ビル2F\n[学芸大学駅 徒歩1分]';
+var TONES = ['いつもの温度','ひとこと添える','すこし語る'];
+var CATS = {
+  salon: { label:'カット・施術風景', art:'salon',
+    tags:'#学芸大学美容室\n#学大美容室\n#メンズカット\n#学大メンズカット\n#メンズショート',
+    caps:[
+      'cut ✂︎',
+      'cut ✂︎\n\n朝は、ワックスを揉み込んで30秒。',
+      'メンズショート。\n直毛で動きが出にくい方に、扱いやすいニュアンスをご提案しています。'
+    ]},
+  flower: { label:'今週の花', art:'flower',
+    tags:'#学芸大学美容室\n#学大美容室\n#花のある暮らし',
+    caps:[
+      'ドウダンツツジ。',
+      '花を替えました。今週はドウダンツツジ。',
+      '二週間に一度、店の花を替えています。\n席から見える緑が、すこし夏になりました。'
+    ]},
+  tea: { label:'今月のお茶', art:'tea',
+    tags:'#学芸大学美容室\n#学大美容室\n#お茶の時間',
+    caps:[
+      '今月のお茶。',
+      '今月のお茶は、水出しのほうじ茶。',
+      'カウンセリングの前に、季節のお茶を一杯。\n今月は水出しのほうじ茶です。'
+    ]},
+  product: { label:'ピトレティカ', art:'product',
+    tags:'#学芸大学美容室\n#学大美容室\n#pittoretiqua\n#サロン専売',
+    caps:[
+      'pittoretiqua',
+      'pittoretiqua、入荷しました。',
+      '洗い上がりの軽さで選ぶなら。\n髪質に合わせて、一本ずつご提案しています。'
+    ]}
+};
+
+var ALT={
+ salon:[["men's cut \u2702\ufe0e","after\u3002\u4e7e\u304b\u3057\u305f\u3060\u3051\u3067\u3059\u3002","\u5208\u308a\u4e0a\u3052\u3059\u304e\u306a\u3044\u3001\u8033\u307e\u308f\u308a\u3059\u3063\u304d\u308a\u306e\u30b7\u30e7\u30fc\u30c8\u3002\n\u4f38\u3073\u3066\u3082\u5f62\u304c\u6b8b\u308b\u3088\u3046\u306b\u5207\u3063\u3066\u3044\u307e\u3059\u3002"],["short \u2702\ufe0e","\u672c\u65e5\u306e\u30ab\u30c3\u30c8\u3002","\u524d\u9aea\u306f\u76ee\u306b\u304b\u304b\u3089\u306a\u3044\u9577\u3055\u3067\u3001\u675f\u611f\u3092\u3059\u3053\u3057\u3002\n\u671d\u306e\u30bb\u30c3\u30c8\u306f\u3001\u6307\u3067\u6574\u3048\u308b\u3060\u3051\u3067\u3059\u3002"]],
+ flower:[["\u30b9\u30e2\u30fc\u30af\u30c4\u30ea\u30fc\u3002","\u679d\u3082\u306e\u304c\u590f\u8272\u306b\u306a\u308a\u307e\u3057\u305f\u3002","\u5e97\u306e\u82b1\u306f\u3001\u3044\u3064\u3082\u8fd1\u6240\u306e\u82b1\u5c4b\u3055\u3093\u3067\u3002\n\u4eca\u9031\u306f\u30b9\u30e2\u30fc\u30af\u30c4\u30ea\u30fc\u3067\u3059\u3002"],["\u7a93\u8fba\u306e\u7dd1\u3002","\u7a93\u8fba\u306e\u7dd1\u3092\u66ff\u3048\u307e\u3057\u305f\u3002","\u5207\u308a\u623b\u3057\u3066\u3001\u6c34\u3092\u66ff\u3048\u3066\u3002\n\u7dd1\u304c\u9577\u3082\u3061\u3059\u308b\u5b63\u7bc0\u306b\u306a\u308a\u307e\u3057\u305f\u3002"]],
+ tea:[["\u9ea6\u8336\u3002","\u51b7\u305f\u3044\u9ea6\u8336\u3001\u306f\u3058\u3081\u307e\u3057\u305f\u3002","\u304a\u5f85\u3061\u306e\u9593\u306e\u304a\u8336\u3092\u66ff\u3048\u307e\u3057\u305f\u3002\n\u4eca\u6708\u306f\u9999\u3070\u3057\u3044\u3068\u3046\u3082\u308d\u3053\u3057\u8336\u3067\u3059\u3002"],["\u672c\u65e5\u306e\u304a\u8336\u3002","\u4eca\u65e5\u306e\u304a\u8336\u306f\u3001\u3059\u3053\u3057\u6fc3\u3044\u3081\u3002","\u65bd\u8853\u306e\u5408\u9593\u306e\u4e00\u676f\u306b\u3002\n\u6c37\u3092\u591a\u3081\u306e\u3001\u590f\u4ed5\u69d8\u3067\u3059\u3002"]],
+ product:[["restock\u3002","pittoretiqua\u3001\u518d\u5165\u8377\u3057\u307e\u3057\u305f\u3002","\u982d\u76ae\u304b\u3089\u3059\u3063\u304d\u308a\u6d17\u3044\u305f\u3044\u65b9\u306b\u3002\n\u4f7f\u3044\u65b9\u306f\u65bd\u8853\u306e\u3068\u304d\u306b\u304a\u4f1d\u3048\u3057\u307e\u3059\u3002"],["pittoretiqua \u2702\ufe0e","\u30db\u30fc\u30e0\u30b1\u30a2\u306e\u3054\u76f8\u8ac7\u304c\u5897\u3048\u3066\u3044\u307e\u3059\u3002","\u30b7\u30e3\u30f3\u30d7\u30fc\u3092\u66ff\u3048\u308b\u306a\u3089\u3001\u307e\u305a\u4e00\u9031\u9593\u3002\n\u9055\u3044\u306f\u3001\u4e7e\u304b\u3059\u3068\u304d\u306b\u308f\u304b\u308a\u307e\u3059\u3002"]]
+};
+var altIdx=0;
+var FEED = [
+  {art:'flower', t:2, cap:CATS.flower.caps[1], tags:CATS.flower.tags},
+  {art:'salon', t:1, cap:'cut ✂︎', tags:CATS.salon.tags},
+  {art:'books', t:3, cap:'倉俣史朗。', tags:'#学芸大学美容室\n#学大美容室\n#倉俣史朗'},
+  {art:'tea', t:1, cap:CATS.tea.caps[1], tags:CATS.tea.tags},
+  {art:'product', t:2, cap:CATS.product.caps[0], tags:CATS.product.tags},
+  {art:'salon', t:3, cap:CATS.salon.caps[2], tags:CATS.salon.tags},
+  {art:'flower', t:1, cap:'今週の花。', tags:CATS.flower.tags},
+  {art:'books', t:2, cap:'新しい一冊。', tags:'#学芸大学美容室\n#学大美容室'},
+  {art:'salon', t:2, cap:'cut ✂︎', tags:CATS.salon.tags}
+];
+
+var cur = null, selIdx = 0, POSTED = 0;
+function $(id){ return document.getElementById(id); }
+function show(v){ ['v1','v2','v3','v4'].forEach(function(x){ $(x).classList.toggle('on', x===v); }); window.scrollTo(0,0); }
+function steps(n){
+  $('st1').className = n>1 ? 'done' : 'on';
+  $('st2').className = n===2 ? 'on' : n>2 ? 'done' : '';
+  $('st3').className = n===3 ? 'on' : n>3 ? 'done' : '';
+}
+
+Object.keys(CATS).forEach(function(key){
+  var c = CATS[key];
+  var b = document.createElement('button');
+  b.className='tile';
+  b.innerHTML = ART[c.art](1) + '<span class="lb">'+c.label+'</span>';
+  b.onclick = function(){ cur = key; startGen(); };
+  $('tiles').appendChild(b);
+});
+
+function startGen(){
+  altIdx = 0;
+  var c = CATS[cur];
+  $('genPh').innerHTML = ART[c.art](1);
+  steps(2); show('v2');
+  setTimeout(buildApprove, 1600);
+}
+
+function capsNow(){ var c = CATS[cur]; return altIdx===0 ? c.caps : ALT[cur][(altIdx-1)%ALT[cur].length]; }
+function buildApprove(){
+  var c = CATS[cur]; selIdx = 0;
+  $('apprPh').innerHTML = ART[c.art](1);
+  $('sigline').textContent = SIG.replace(/\n+/g,' ／ ') + ' ＋ ' + c.tags.replace(/\n/g,' ');
+  var box = $('cands'); box.innerHTML='';
+  capsNow().forEach(function(txt,i){
+    var d = document.createElement('div');
+    d.className = 'cand'+(i===0?' sel':'');
+    d.innerHTML = '<span class="no">案 '+(i+1)+'｜'+TONES[i]+'</span><p contenteditable="true" spellcheck="false">'+txt+'</p><span class="pick">'+(i===0?'選択中':'これにする')+'</span>';
+    d.onclick = function(e){
+      if(e.target.tagName==='P') return;
+      selIdx = i;
+      var cs = box.querySelectorAll('.cand');
+      for(var j=0;j<cs.length;j++){
+        cs[j].classList.toggle('sel', j===i);
+        cs[j].querySelector('.pick').textContent = j===i ? '選択中' : 'これにする';
+      }
+    };
+    box.appendChild(d);
+  });
+  steps(3); show('v3');
+}
+
+$('redo').onclick = function(){ steps(1); show('v1'); };
+$('refresh').onclick = function(){ altIdx++; buildApprove(); };
+$('ok').onclick = function(){
+  var c = CATS[cur];
+  var txt = $('cands').querySelectorAll('.cand p')[selIdx].innerText;
+  FEED.unshift({art:c.art, t:1, cap:txt, tags:c.tags, isNew:true});
+  POSTED++;
+  renderFeed(); steps(4); show('v4');
+  var t = $('toast');
+  t.textContent = $('dualpost').checked ? '投稿しました（インスタ＋JOURNAL）' : '投稿しました（デモ）';
+  t.classList.add('on');
+  setTimeout(function(){ t.classList.remove('on'); }, 2200);
+};
+
+function renderFeed(){
+  var g = $('grid'); g.innerHTML='';
+  $('pc').textContent = 19 + POSTED;
+  FEED.forEach(function(p,i){
+    var b = document.createElement('button');
+    b.className = 'cell'+(p.isNew && i===0 ? ' new' : '');
+    b.innerHTML = ART[p.art](p.t) + (p.isNew && i===0 ? '<span class="badge">たった今</span>' : '');
+    b.onclick = function(){
+      $('mImg').innerHTML = ART[p.art](p.t);
+      $('mCap').textContent = p.cap + '\n\n' + SIG;
+      $('mTag').textContent = p.tags;
+      $('modal').classList.add('on');
+    };
+    g.appendChild(b);
+  });
+}
+$('mClose').onclick = function(){ $('modal').classList.remove('on'); };
+$('modal').onclick = function(e){ if(e.target===$('modal')) $('modal').classList.remove('on'); };
+$('again').onclick = function(){ FEED.forEach(function(p){p.isNew=false;}); steps(1); show('v1'); };
+</script>
+</body>
+</html>

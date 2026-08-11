@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="only light">
+<title>phere-hair.com 改善差分デモ｜AI勉強会</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:only light;--red:#B5402F;--ink:#222;--grey:#777;--line:#E6E4E0;--bg:#FFFFFF;--paper:#F5F4F1}
+@media (prefers-color-scheme: dark){html,body{background:#F5F4F1 !important;color:#222 !important}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN',sans-serif;font-size:14px;line-height:1.9;letter-spacing:.05em;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+
+/* ---- 操作バー（デモ用UI）---- */
+.ctl{position:sticky;top:0;z-index:100;background:#2B2B28;color:#EFECE5;padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ctl .t{font-size:11px;letter-spacing:.2em}
+.ctl .chips{display:flex;gap:6px;margin-left:auto}
+.ctl .chip{border:1px solid #55534E;background:transparent;color:#B9B5AA;font-size:11.5px;letter-spacing:.14em;padding:6px 14px}
+.ctl .chip.on{background:var(--red);border-color:var(--red);color:#fff}
+.ctl .lg{flex-basis:100%;font-size:10px;color:#8F8B80;letter-spacing:.1em}
+
+/* ---- サイト再現 ---- */
+.site{max-width:430px;margin:0 auto;background:var(--bg);min-height:100svh;border-left:1px solid var(--line);border-right:1px solid var(--line);padding-bottom:96px}
+header.hd{padding:20px 18px 12px;border-bottom:1px solid var(--line)}
+.hd .row{display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;letter-spacing:.45em;font-weight:400}
+nav ul{list-style:none;display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:12px}
+nav a{color:var(--grey);text-decoration:none;font-size:10.5px;letter-spacing:.18em}
+.h1{font-size:13px;letter-spacing:.3em;color:var(--grey);padding:18px 18px 6px}
+.ph{width:100%;display:block}
+.ph img{width:100%;display:block}
+.ph .alt{display:none;background:#EBE9E4;color:#9A968C;font-size:11px;letter-spacing:.14em;text-align:center;padding:64px 0}
+.ph.err img{display:none}.ph.err .alt{display:block}
+.slides{position:relative;margin:0 18px;aspect-ratio:4/3;overflow:hidden;background:#EBE9E4}
+.slides .ph{position:absolute;inset:0;opacity:0;transition:opacity .8s}
+.slides .ph img{width:100%;height:100%;object-fit:cover}
+.slides .ph .alt{padding:0;height:100%;display:none;align-items:center;justify-content:center}
+.slides .ph.err .alt{display:flex}
+.slides .ph.onn{opacity:1}
+.sdots{display:flex;gap:6px;justify-content:center;margin:10px 0 0}
+.sdots i{width:6px;height:6px;border-radius:50%;background:#D5D2CA;transition:background .3s}
+.sdots i.onn{background:#8A8577}
+.stack{display:flex;flex-direction:column;gap:10px;padding:0 18px}
+
+/* ---- 差分マーカー ---- */
+.diff{position:relative;outline:2px dashed var(--red);outline-offset:5px;margin:14px 0}
+.diff::before{content:attr(data-n);position:absolute;top:-14px;left:-2px;background:var(--red);color:#fff;font-size:9.5px;letter-spacing:.14em;padding:2px 8px;z-index:5}
+body.before .diff, body.before .fbar, body.before .seo{display:none !important}
+
+.reserve-btn{background:var(--ink);color:#fff;font-size:11px;letter-spacing:.2em;padding:9px 16px;border:none}
+
+/* JOURNAL */
+.journal{padding:6px 18px 4px}
+.journal .jh{display:flex;align-items:baseline;justify-content:space-between}
+.journal h2{font-size:13px;letter-spacing:.3em;font-weight:500}
+.journal .note{font-size:9.5px;color:var(--red);letter-spacing:.08em}
+.jgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.jc{border:1px solid var(--line)}
+.jc .jimg{aspect-ratio:1;overflow:hidden;background:#EBE9E4}
+.jc .jimg img{width:100%;height:100%;object-fit:cover;display:block}
+.jc .jt{padding:6px 7px 8px}
+.jc .d{font-size:8.5px;color:#AAA;letter-spacing:.06em}
+.jc .c{font-size:10px;line-height:1.5;margin-top:2px}
+
+/* 既存ブログ枠 */
+.blogrow{margin:22px 18px 0;border-top:1px solid var(--line);padding-top:16px}
+.blogrow .bh{font-size:11px;letter-spacing:.26em;color:var(--grey)}
+.bcard{display:flex;gap:12px;margin-top:10px;align-items:center}
+.bcard .bimg{width:96px;height:64px;background:#EBE9E4;flex:none;overflow:hidden}
+.bcard .bimg img{width:100%;height:100%;object-fit:cover}
+.bcard .bt{font-size:12.5px}
+.bcard .bd{font-size:10px;color:#AAA}
+
+/* SEO差分カード */
+.seo{margin:22px 18px 0;border:1px solid var(--line);background:var(--paper);padding:14px 14px 12px}
+.seo h3{font-size:11px;letter-spacing:.2em;color:var(--ink);font-weight:500}
+.seo table{width:100%;border-collapse:collapse;margin-top:8px;font-size:10.5px}
+.seo td{padding:5px 6px;border-top:1px dashed var(--line);vertical-align:top}
+.seo td:first-child{color:#AAA;width:52px;letter-spacing:.1em}
+.seo .b{color:#B0ACA2;text-decoration:line-through}
+.seo .a{color:var(--ink)}
+.seo .a b{color:var(--red);font-weight:500}
+
+/* フッター */
+.ft{margin-top:26px;border-top:1px solid var(--line);padding:18px;font-size:11px;color:var(--grey);line-height:2}
+.ft b{color:var(--ink);font-weight:500;letter-spacing:.2em}
+.ft .links a{color:var(--ink);text-decoration:underline;margin-right:14px}
+.cp{text-align:center;font-size:10px;color:#BBB;padding:14px 0 8px}
+
+/* 追従予約バー */
+.fbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:grid;grid-template-columns:1.2fr .8fr 1fr;z-index:90;border-top:1px solid var(--line)}
+.fbar a{display:block;text-align:center;padding:14px 0;font-size:11.5px;letter-spacing:.14em;text-decoration:none}
+.fbar .hpb{background:var(--ink);color:#fff}
+.fbar .tel{background:#fff;color:var(--ink)}
+.fbar .line{background:#F1EFEA;color:#B4B0A4}
+.fbar .line small{display:block;font-size:8px;letter-spacing:.05em}
+
+.demo{position:fixed;left:10px;bottom:64px;background:rgba(43,43,40,.82);color:#DDD9CF;font-size:9px;letter-spacing:.2em;padding:5px 10px;border-radius:2px;z-index:95}
+</style>
+</head>
+<body>
+<div class="demo">DEMO</div>
+
+<div class="ctl">
+  <span class="t">phere-hair.com 改善差分デモ</span>
+  <div class="chips">
+    <button class="chip" id="cb">現状</button>
+    <button class="chip on" id="ca">改善後</button>
+  </div>
+  <span class="lg">赤い点線＝いまのサイトに「追加」する箇所。作り直しはしません。</span>
+</div>
+
+<div class="site">
+  <header class="hd">
+    <div class="row">
+      <span class="logo">PHERE</span>
+      <span class="diff" data-n="追加①" style="margin:0"><button class="reserve-btn">RESERVE</button></span>
+    </div>
+    <nav><ul>
+      <li><a href="#">HOME</a></li><li><a href="#">SALON</a></li><li><a href="#">MENU</a></li>
+      <li><a href="#">STAFF</a></li><li><a href="#">BLOG</a></li><li><a href="#">RECRUIT</a></li><li><a href="#">CONTACT</a></li>
+    </ul></nav>
+  </header>
+
+  <div class="h1">HOME</div>
+  <div class="slides" id="slides">
+    <span class="ph onn" data-alt="店内全景（実サイト掲載写真）"><img src="https://phere-hair.com/wp-content/uploads/2024/03/zenkei_04-2-scaled.jpg" alt=""></span>
+    <span class="ph" data-alt="シャンプーブース（実サイト掲載写真）"><img src="https://phere-hair.com/wp-content/uploads/2024/03/shompoo_01-scaled.jpg" alt=""></span>
+    <span class="ph" data-alt="本棚（実サイト掲載写真）"><img src="https://phere-hair.com/wp-content/uploads/2024/03/bookshelf_01-3.jpg" alt=""></span>
+  </div>
+  <div class="sdots" id="sdots"><i class="onn"></i><i></i><i></i></div>
+
+  <!-- 差分②：JOURNAL -->
+  <div class="diff" data-n="追加②" style="margin:20px 12px">
+    <div class="journal">
+      <div class="jh"><h2>JOURNAL</h2><span class="note">写真ポストから自動更新</span></div>
+      <div class="jgrid">
+        <div class="jc"><div class="jimg ph" data-alt="花"><img src="https://phere-hair.com/wp-content/uploads/2024/03/bookshelf_01-3.jpg" alt=""></div><div class="jt"><div class="d">8.10</div><div class="c">花を替えました。</div></div></div>
+        <div class="jc"><div class="jimg ph" data-alt="cut"><img src="https://phere-hair.com/wp-content/uploads/2024/03/shompoo_01-scaled.jpg" alt=""></div><div class="jt"><div class="d">8.6</div><div class="c">cut ✂︎</div></div></div>
+        <div class="jc"><div class="jimg ph" data-alt="本棚"><img src="https://phere-hair.com/wp-content/uploads/2024/03/zenkei_04-2-scaled.jpg" alt=""></div><div class="jt"><div class="d">8.2</div><div class="c">今月のお茶。</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 既存要素：ブログ最新（現状のまま） -->
+  <div class="blogrow">
+    <div class="bh">BLOG</div>
+    <div class="bcard">
+      <div class="bimg ph" data-alt="記事画像"><img src="https://phere-hair.com/wp-content/uploads/2025/10/IMG_8618-420x280.jpeg" alt=""></div>
+      <div><div class="bt">スタッフ募集</div><div class="bd">2025-10-24｜BLOG</div></div>
+    </div>
+  </div>
+
+  <!-- 差分④：SEO -->
+  <div class="seo diff" data-n="追加④" style="outline-offset:0">
+    <h3>検索向けの文言（見た目は変わりません）</h3>
+    <table>
+      <tr><td>title</td><td><span class="b">PHERE | HAIR SALON</span><br><span class="a">PHERE｜<b>学芸大学駅徒歩1分</b>のヘアサロン</span></td></tr>
+      <tr><td>説明文</td><td><span class="b">HAIR SALON</span><br><span class="a">学芸大学の完全予約制プライベートサロン。カット・カラー・パーマ・ヘッドスパ。<b>AIが各ページ分を下書きします</b></span></td></tr>
+    </table>
+  </div>
+
+  <!-- 差分③：フッター -->
+  <div class="diff" data-n="追加③" style="margin:24px 12px 0">
+    <div class="ft">
+      <b>PHERE</b><br>
+      東京都目黒区鷹番3-1-2 アーク石田ビル2F（学芸大学駅 徒歩1分）<br>
+      10:00–20:00｜火曜定休｜TEL 03-6412-8879<br>
+      <span class="links"><a href="#">Instagram</a><a href="#">Web予約（ホットペッパー）</a></span>
+    </div>
+  </div>
+
+  <div class="cp">© PHERE.</div>
+</div>
+
+<!-- 差分①´：追従予約バー -->
+<div class="fbar diff" data-n="追加①" style="outline-offset:-2px;margin:0">
+  <a class="hpb" href="#">WEB予約</a>
+  <a class="tel" href="#">電話</a>
+  <a class="line" href="#">LINE予約<small>開設後に追加</small></a>
+</div>
+
+<script>
+document.querySelectorAll('.ph img').forEach(function(im){
+  var w=im.closest('.ph');
+  var alt=document.createElement('span');alt.className='alt';alt.textContent=w.getAttribute('data-alt')||'PHOTO';
+  w.appendChild(alt);
+  im.addEventListener('error',function(){w.classList.add('err')});
+});
+var _sl=document.querySelectorAll('#slides .ph'),_sd=document.querySelectorAll('#sdots i'),_si=0;
+setInterval(function(){_si=(_si+1)%_sl.length;
+ _sl.forEach(function(e,j){e.classList.toggle('onn',j===_si)});
+ _sd.forEach(function(e,j){e.classList.toggle('onn',j===_si)});},3200);
+var cb=document.getElementById('cb'),ca=document.getElementById('ca');
+function mode(before){
+  document.body.classList.toggle('before',before);
+  cb.classList.toggle('on',before);ca.classList.toggle('on',!before);
+}
+cb.onclick=function(){mode(true)};ca.onclick=function(){mode(false)};
+</script>
+</body>
+</html>

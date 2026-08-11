@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="only light">
+<title>PHERE 収益シミュレーター｜AI勉強会デモ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: only light;
+  --plaster:#EFECE5;--stone:#DEDAD1;--ink:#2B2B28;--moss:#736E63;--brass:#8A8577;--wood:#C89F6B;--red:#B5402F;--white:#FBFAF7;
+  --serif-en:'Cormorant Garamond',serif;--serif-jp:'Shippori Mincho',serif;--sans:'Zen Kaku Gothic New',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  html,body{background:#EFECE5 !important;color:#2B2B28 !important}
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--plaster);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.8;letter-spacing:.04em;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1060px;margin:0 auto;padding:40px 22px 90px}
+h1{font-family:var(--serif-jp);font-weight:500;font-size:clamp(21px,3vw,28px);letter-spacing:.16em}
+.eyebrow{font-family:var(--serif-en);font-size:11px;letter-spacing:.4em;color:var(--brass);text-transform:uppercase;display:block;margin-bottom:8px}
+.sub{color:var(--moss);font-size:12.5px;margin-top:10px}
+
+.presets{display:flex;gap:10px;flex-wrap:wrap;margin:30px 0 26px}
+.chip{border:1px solid var(--stone);background:var(--white);padding:9px 20px;font-size:12.5px;letter-spacing:.12em;cursor:pointer;transition:all .25s;font-family:var(--sans)}
+.chip small{display:block;font-size:10px;color:var(--moss);letter-spacing:.06em}
+.chip:hover{border-color:var(--brass)}
+.chip.on{background:var(--ink);color:var(--white);border-color:var(--red)}
+.chip.on small{color:#B9C0B8}
+
+.grid{display:grid;grid-template-columns:1.15fr .95fr;gap:34px;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+
+.panel{background:var(--white);border:1px solid var(--stone);padding:30px 28px}
+.panel h2{font-family:var(--serif-jp);font-size:15px;font-weight:600;letter-spacing:.2em;margin-bottom:6px}
+.panel .hint{font-size:11px;color:var(--moss);margin-bottom:22px}
+
+.ctrl{margin-bottom:24px}
+.ctrl .lab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.ctrl .lab span{font-size:13px;letter-spacing:.1em}
+.ctrl .lab b{font-family:var(--serif-en);font-weight:500;font-size:19px;letter-spacing:.04em;color:var(--ink)}
+.ctrl .lab b small{font-family:var(--sans);font-size:10.5px;color:var(--moss);font-weight:400;margin-left:3px}
+input[type=range]{width:100%;appearance:none;height:2px;background:linear-gradient(to right,var(--brass) var(--p,50%),var(--stone) var(--p,50%));outline:none}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:var(--white);border:1.5px solid var(--brass);cursor:pointer;box-shadow:0 1px 4px rgba(35,45,40,.18)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--white);border:1.5px solid var(--brass);cursor:pointer}
+input[type=range]:focus-visible{outline:2px solid var(--brass);outline-offset:6px}
+.ctrl .memo{font-size:10.5px;color:#9A968A;margin-top:5px}
+
+.result{position:sticky;top:20px}
+.big{background:var(--ink);color:var(--plaster);padding:34px 30px}
+.big .l{font-size:11px;letter-spacing:.3em;color:var(--brass)}
+.big .v{font-family:var(--serif-en);font-weight:300;font-size:clamp(42px,6vw,58px);line-height:1.15;letter-spacing:.02em}
+.big .v small{font-size:16px;letter-spacing:.1em;font-family:var(--serif-jp)}
+.big .delta{margin-top:8px;font-size:12.5px;letter-spacing:.08em;color:#B9C0B8}
+.big .delta b{color:#D9B08C;font-weight:500}
+.big .delta.neg b{color:#C98F7A}
+
+.break{background:var(--white);border:1px solid var(--stone);border-top:none;padding:26px 30px}
+.line{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--stone);font-size:13px}
+.line:last-child{border-bottom:none}
+.line .k{color:var(--moss);letter-spacing:.08em}
+.line .n{font-family:var(--serif-en);font-size:16.5px;letter-spacing:.03em}
+.line.neg .n{color:#A0563C}
+.line.tot{border-top:1px solid var(--ink);margin-top:6px;padding-top:13px}
+.line.tot .k{color:var(--ink);font-weight:500}
+.line.tot .n{font-size:19px}
+.bar{height:8px;background:var(--stone);margin:16px 0 4px;display:flex;overflow:hidden}
+.bar i{display:block;height:100%}
+.bar .b1{background:var(--moss)}
+.bar .b2{background:var(--wood)}
+.legend{display:flex;gap:18px;font-size:10.5px;color:var(--moss)}
+.legend i{display:inline-block;width:9px;height:9px;margin-right:5px;vertical-align:-1px}
+.year{margin-top:14px;font-size:12px;color:var(--moss);letter-spacing:.08em}
+.year b{font-family:var(--serif-en);font-size:16px;color:var(--ink);font-weight:500;letter-spacing:.03em}
+
+.foot{margin-top:34px;font-size:11px;color:#9A968A;line-height:2}
+.demo{position:fixed;left:14px;bottom:14px;background:rgba(35,45,40,.82);color:#D8D4C8;font-size:10px;letter-spacing:.22em;padding:6px 12px;border-radius:2px}
+</style>
+</head>
+<body>
+<div class="demo">DEMO — AI勉強会用モック</div>
+<div class="wrap">
+
+  <span class="eyebrow">PHERE — Revenue Simulator</span>
+  <h1>サロン収益シミュレーター</h1>
+  <p class="sub">スライダーを動かすと月商が変わります。フェーズボタンは、勉強会でご提案する段階的モデルのプリセットです。<br>※初期値はすべて仮置き。第0回ヒアリングでサロンボードの実数に差し替えます。</p>
+
+  <div class="presets" id="presets"></div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>経営レバー</h2>
+      <p class="hint">売上 ＝ 客数 ×（施術単価 ＋ 店販）。2人×4席のサロンは客数上限が低いため、単価・店販・来店頻度が主戦場です。</p>
+      <div id="ctrls"></div>
+    </div>
+
+    <div class="result">
+      <div class="big">
+        <div class="l">月商（施術＋店販）</div>
+        <div class="v"><span id="rev">—</span><small> 万円</small></div>
+        <div class="delta" id="delta">現状比 —</div>
+      </div>
+      <div class="break">
+        <div class="line"><span class="k">月間客数</span><span class="n" id="cnt">—</span></div>
+        <div class="line"><span class="k">施術売上</span><span class="n" id="svc">—</span></div>
+        <div class="line"><span class="k">店販売上</span><span class="n" id="rtl">—</span></div>
+        <div class="bar"><i class="b1" id="barSvc"></i><i class="b2" id="barRtl"></i></div>
+        <div class="legend"><span><i class="b1" style="background:var(--moss)"></i>施術</span><span><i class="b2" style="background:var(--wood)"></i>店販</span></div>
+        <div class="line neg" style="margin-top:14px"><span class="k">HPB掲載料（月額）</span><span class="n" id="hpbFix">—</span></div>
+        <div class="line neg"><span class="k">HPB予約手数料（2%）</span><span class="n" id="hpbFee">—</span></div>
+        <div class="line tot"><span class="k">HPBコスト差引後</span><span class="n" id="net">—</span></div>
+        <div class="year">年換算 月商 <b id="yrev">—</b>　／　年間HPBコスト <b id="yhpb">—</b></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot">
+    計算式：月間客数 ＝ スタイリスト数 × 営業日数 × 1人1日あたり客数。施術売上 ＝ 客数 × 施術単価。店販売上 ＝ 施術売上 × 店販比率。
+    HPB予約手数料 ＝ 施術売上 × HPB経由比率 × 2%（全プラン一律・ネット予約経由売上〔税抜〕の2%）。
+    掲載料は非公開で、エリアやプランにより月数万円〜と幅があります。ここでの初期値はあくまで仮置きです——実際のご契約額が分かれば、つまみひとつでその場で正確な試算に変わります。
+    材料費・人件費・家賃等は含みません（売上とHPBコストのみの簡易モデル）。
+  </p>
+</div>
+
+<script>
+const DEFS=[
+ {id:'sty', label:'スタイリスト数', min:1,max:4,step:1, unit:'名', memo:''},
+ {id:'days',label:'営業日数／月', min:20,max:27,step:1, unit:'日', memo:''},
+ {id:'perday',label:'1人1日あたり客数', min:3,max:7,step:0.1, unit:'名', memo:'来店サイクルが縮む・稼働が埋まるとここが上がる'},
+ {id:'price',label:'施術単価（平均）', min:7000,max:14000,step:100, unit:'円', memo:'再来平均は9,000円台（HPB掲載値より仮置き）'},
+ {id:'retail',label:'店販比率（施術売上比）', min:0,max:20,step:1, unit:'%', memo:'業界水準は5%前後、目標10%'},
+ {id:'hpbShare',label:'HPB経由予約の比率', min:0,max:100,step:5, unit:'%', memo:'美容センサスではネット予約5〜6割・電話2割強。ここでは仮置き65%（実数はサロンボードの予約経路をご一緒に確認して置き換えます）'},
+ {id:'hpbFix',label:'HPB月額掲載料（仮）', min:0,max:200000,step:5000, unit:'円', memo:'初期値は仮置きです。実際のご契約額（明細）に合わせて調整してください'}
+];
+const PRESETS=[
+ {name:'現状（仮）', note:'HPB一本足', v:{sty:2,days:25,perday:4.5,price:9500,retail:3,hpbShare:65,hpbFix:50000}},
+ {name:'Phase 1', note:'再来の自社化', v:{sty:2,days:25,perday:4.5,price:9500,retail:3,hpbShare:50,hpbFix:50000}},
+ {name:'Phase 2', note:'単価と次回予約', v:{sty:2,days:25,perday:4.8,price:10500,retail:5,hpbShare:40,hpbFix:50000}},
+ {name:'Phase 3', note:'店販10%', v:{sty:2,days:25,perday:5.0,price:10500,retail:10,hpbShare:30,hpbFix:50000}},
+ {name:'Phase 4', note:'3人目・空席活用', v:{sty:3,days:25,perday:4.5,price:10500,retail:10,hpbShare:30,hpbFix:50000}}
+];
+const state={};
+const fmt=n=>'¥'+Math.round(n).toLocaleString('ja-JP');
+const man=n=>(n/10000).toLocaleString('ja-JP',{maximumFractionDigits:1});
+
+function calc(v){
+ const cnt=v.sty*v.days*v.perday;
+ const svc=cnt*v.price;
+ const rtl=svc*v.retail/100;
+ const rev=svc+rtl;
+ const fee=svc*(v.hpbShare/100)*0.02;
+ const net=rev-fee-v.hpbFix;
+ return{cnt,svc,rtl,rev,fee,net};
+}
+const BASE=calc(PRESETS[0].v);
+
+function render(){
+ const r=calc(state);
+ document.getElementById('rev').textContent=man(r.rev);
+ document.getElementById('cnt').textContent=Math.round(r.cnt).toLocaleString('ja-JP')+' 名';
+ document.getElementById('svc').textContent=fmt(r.svc);
+ document.getElementById('rtl').textContent=fmt(r.rtl);
+ document.getElementById('hpbFix').textContent='− '+fmt(state.hpbFix);
+ document.getElementById('hpbFee').textContent='− '+fmt(r.fee);
+ document.getElementById('net').textContent=fmt(r.net);
+ document.getElementById('yrev').textContent=man(r.rev*12)+' 万円';
+ document.getElementById('yhpb').textContent=man((r.fee+state.hpbFix)*12)+' 万円';
+ const d=r.rev-BASE.rev, el=document.getElementById('delta');
+ el.classList.toggle('neg',d<0);
+ el.innerHTML='現状（仮）比 <b>'+(d>=0?'+':'−')+man(Math.abs(d))+' 万円／月</b>（年 '+(d>=0?'+':'−')+man(Math.abs(d)*12)+' 万円）';
+ const p1=r.svc/r.rev*100;
+ document.getElementById('barSvc').style.width=p1+'%';
+ document.getElementById('barRtl').style.width=(100-p1)+'%';
+}
+function setSlider(input,def){
+ const p=(input.value-def.min)/(def.max-def.min)*100;
+ input.style.setProperty('--p',p+'%');
+ const b=document.getElementById('v_'+def.id);
+ let disp=def.id==='price'||def.id==='hpbFix'?Number(input.value).toLocaleString('ja-JP'):input.value;
+ b.childNodes[0].textContent=disp;
+}
+function build(){
+ const box=document.getElementById('ctrls');
+ DEFS.forEach(def=>{
+  state[def.id]=PRESETS[0].v[def.id];
+  const w=document.createElement('div');w.className='ctrl';
+  w.innerHTML='<div class="lab"><span>'+def.label+'</span><b id="v_'+def.id+'">0<small>'+def.unit+'</small></b></div>'+
+   '<input type="range" id="in_'+def.id+'" min="'+def.min+'" max="'+def.max+'" step="'+def.step+'" value="'+state[def.id]+'" aria-label="'+def.label+'">'+
+   (def.memo?'<div class="memo">'+def.memo+'</div>':'');
+  box.appendChild(w);
+  const input=w.querySelector('input');
+  input.addEventListener('input',()=>{state[def.id]=Number(input.value);setSlider(input,def);selectChip(-1);render();});
+  setSlider(input,def);
+ });
+ const ps=document.getElementById('presets');
+ PRESETS.forEach((p,i)=>{
+  const c=document.createElement('button');c.className='chip'+(i===0?' on':'');
+  c.innerHTML=p.name+'<small>'+p.note+'</small>';
+  c.addEventListener('click',()=>{applyPreset(i)});
+  ps.appendChild(c);
+ });
+}
+function selectChip(i){document.querySelectorAll('.chip').forEach((c,j)=>c.classList.toggle('on',j===i));}
+function applyPreset(i){
+ Object.assign(state,PRESETS[i].v);
+ DEFS.forEach(def=>{const input=document.getElementById('in_'+def.id);input.value=state[def.id];setSlider(input,def);});
+ selectChip(i);render();
+}
+build();render();
+</script>
+</body>
+</html>
