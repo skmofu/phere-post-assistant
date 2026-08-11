@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>PHERE 投稿アシスタント｜プロトタイプ v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:only light;--plaster:#EFECE5;--stone:#DEDAD1;--ink:#2B2B28;--moss:#736E63;--red:#B5402F;--wood:#C89F6B;--green:#4A5A42;--white:#FBFAF7;
+--serif-en:'Cormorant Garamond',serif;--sans:'Zen Kaku Gothic New',sans-serif}
+@media (prefers-color-scheme:dark){html,body{background:#EFECE5!important;color:#2B2B28!important}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--plaster);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.8;letter-spacing:.04em;-webkit-font-smoothing:antialiased}
+button{font-family:var(--sans);cursor:pointer}
+.stage{max-width:430px;margin:0 auto;min-height:100svh;background:var(--white);border-left:1px solid var(--stone);border-right:1px solid var(--stone);display:flex;flex-direction:column}
+.top{padding:18px 20px 14px;border-bottom:1px solid var(--stone);background:var(--white);position:sticky;top:0;z-index:10}
+.top .brand{display:flex;align-items:baseline;justify-content:space-between}
+.top .logo{font-family:var(--serif-en);font-size:17px;letter-spacing:.42em}
+.top .app{font-size:10px;letter-spacing:.18em;color:var(--red)}
+.steps{display:flex;gap:6px;margin-top:12px}
+.steps span{flex:1;text-align:center;font-size:10.5px;letter-spacing:.14em;color:#B4B0A4;padding:6px 0;border-bottom:2px solid var(--stone);transition:all .3s}
+.steps span.on{color:var(--ink);border-color:var(--red)}
+.steps span.done{color:var(--moss);border-color:var(--moss)}
+.view{display:none;flex:1;flex-direction:column}
+.view.on{display:flex}
+.pad{padding:22px 20px}
+h2{font-weight:500;font-size:16.5px;letter-spacing:.16em}
+.sub{color:var(--moss);font-size:12px;margin-top:6px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.tile{position:relative;border:1px solid var(--stone);background:var(--plaster);aspect-ratio:1;overflow:hidden;padding:0;transition:transform .25s}
+.tile:active{transform:scale(.97)}
+.tile svg{width:100%;height:100%;display:block}
+.tile .lb{position:absolute;left:0;right:0;bottom:0;background:rgba(251,250,247,.9);font-size:11px;letter-spacing:.16em;padding:6px 0;color:var(--ink)}
+.tile.up{grid-column:1/3;aspect-ratio:2.6;border:1.5px dashed var(--red);background:#FBF6F2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--ink);font-size:13px;letter-spacing:.14em}
+.tile.up svg{width:30px;height:30px;stroke:var(--red);fill:none;stroke-width:1.5}
+.tile.up img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tile.up .re{position:absolute;right:8px;bottom:8px;background:rgba(43,43,40,.8);color:#fff;font-size:10px;letter-spacing:.12em;padding:4px 10px}
+.sect{margin-top:16px;font-size:10.5px;letter-spacing:.18em;color:#B4B0A4}
+.memo{width:100%;margin-top:10px;border:1px solid var(--stone);padding:11px 12px;font-family:var(--sans);font-size:13px;background:var(--white)}
+.memo::placeholder{color:#B4B0A4}
+.hint{margin-top:14px;font-size:10.5px;color:#9A968A;line-height:1.9}
+.gen{align-items:center;justify-content:center;text-align:center;flex:1}
+.gen .ph{width:180px;height:180px;border:1px solid var(--stone);background:var(--plaster);margin:0 auto 26px;overflow:hidden}
+.gen .ph svg,.gen .ph img{width:100%;height:100%;object-fit:cover}
+.dots{letter-spacing:.2em;font-size:14px;color:var(--moss)}
+.dots i{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--red);margin-left:6px;animation:b 1.2s infinite}
+.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+@keyframes b{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.gen .mini{font-size:10.5px;color:#9A968A;margin-top:14px}
+.appr .photo{width:110px;height:110px;border:1px solid var(--stone);background:var(--plaster);float:right;margin:0 0 10px 14px;overflow:hidden}
+.appr .photo svg,.appr .photo img{width:100%;height:100%;object-fit:cover}
+.cands{margin-top:14px;clear:both}
+.cand{border:1px solid var(--stone);background:var(--white);padding:13px 14px 11px;margin-bottom:10px;position:relative}
+.cand .no{font-size:10px;letter-spacing:.2em;color:var(--moss)}
+.cand p{font-size:13px;white-space:pre-wrap;margin-top:5px;min-height:1.4em}
+.cand.sel{border-color:var(--red);background:#FBF6F2}
+.cand .pick{position:absolute;top:11px;right:11px;font-size:10px;letter-spacing:.14em;border:1px solid var(--stone);background:var(--white);padding:4px 10px}
+.cand.sel .pick{background:var(--red);border-color:var(--red);color:var(--white)}
+.sig{border-left:2px solid var(--stone);padding:8px 12px;margin-top:12px;font-size:11px;color:var(--moss);white-space:pre-wrap;line-height:1.7}
+.sig b{display:block;color:var(--ink);font-weight:500;letter-spacing:.14em;font-size:10px;margin-bottom:4px}
+.dual{display:flex;gap:9px;align-items:flex-start;font-size:12px;margin-top:13px;color:var(--ink);line-height:1.6}
+.dual input{accent-color:var(--red);margin-top:4px}
+.dual small{display:block;font-size:10px;color:#9A968A}
+.refreshb{width:100%;margin-top:2px;padding:11px 0;font-size:11.5px;letter-spacing:.18em;border:1px dashed var(--stone);background:var(--white);color:var(--moss)}
+.refreshb:disabled{color:#C4C0B4;border-color:#E7E4DC}
+.editnote{font-size:10.5px;color:#9A968A;margin-top:10px}
+.errbox{display:none;margin-top:10px;border:1px solid #D9B4A8;background:#FBF3F0;color:#8F4B3B;font-size:11.5px;padding:10px 12px;line-height:1.7}
+.errbox.on{display:block}
+.btns{display:flex;gap:10px;margin:16px 0 26px}
+.btn{flex:1;padding:14px 0;font-size:13px;letter-spacing:.2em;border:1px solid var(--ink);background:var(--white)}
+.btn.solid{background:var(--ink);color:var(--white)}
+.btn.solid:active{background:var(--red);border-color:var(--red)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:-60px;background:var(--ink);color:#EFECE5;font-size:12px;letter-spacing:.16em;padding:10px 22px;transition:bottom .5s;z-index:50}
+.toast.on{bottom:28px}
+.prof{padding:22px 20px 16px;border-bottom:1px solid var(--stone)}
+.prof .row{display:flex;align-items:center;gap:16px}
+.avatar{width:64px;height:64px;border-radius:50%;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--serif-en);font-size:11px;letter-spacing:.24em;background:var(--plaster)}
+.prof .nm{font-size:14px;font-weight:500;letter-spacing:.1em}
+.prof .st{font-size:11px;color:var(--moss);margin-top:2px}
+.bio{font-size:11.5px;color:var(--moss);margin-top:12px;line-height:1.8}
+.bio b{color:var(--ink);font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--stone);border-top:1px solid var(--stone)}
+.cell{position:relative;background:var(--plaster);aspect-ratio:1;padding:0;border:none;overflow:hidden}
+.cell svg,.cell img{width:100%;height:100%;display:block;object-fit:cover}
+.cell.new{animation:pop .6s ease}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+.cell .badge{position:absolute;top:6px;right:6px;background:var(--red);color:var(--white);font-size:9px;letter-spacing:.14em;padding:2px 7px}
+.copybox{margin:18px 20px 0;border:1px solid var(--stone);background:var(--white)}
+.copybox .ch{padding:10px 14px;border-bottom:1px solid var(--stone);font-size:11px;letter-spacing:.18em;color:var(--moss)}
+.copybox pre{padding:12px 14px;font-family:var(--sans);font-size:12px;white-space:pre-wrap;line-height:1.7;max-height:180px;overflow:auto}
+.copybox .cb{width:100%;border:none;border-top:1px solid var(--stone);background:var(--ink);color:#fff;padding:13px 0;font-size:12px;letter-spacing:.2em}
+.copybox .cn{font-size:10px;color:#9A968A;padding:8px 14px 10px;line-height:1.7}
+.reset{margin:18px 20px 30px}
+.modal{position:fixed;inset:0;background:rgba(43,43,40,.45);display:none;align-items:flex-end;justify-content:center;z-index:60}
+.modal.on{display:flex}
+.sheet{background:var(--white);width:100%;max-width:430px;max-height:82svh;overflow:auto;border-top:2px solid var(--red)}
+.sheet .img{aspect-ratio:1;background:var(--plaster)}
+.sheet .img svg,.sheet .img img{width:100%;height:100%;object-fit:cover}
+.sheet .body{padding:16px 20px 28px}
+.sheet .who{font-size:12px;font-weight:500;letter-spacing:.12em}
+.sheet .cap{font-size:13px;white-space:pre-wrap;margin-top:8px}
+.sheet .tg{font-size:12px;color:var(--moss);margin-top:10px;white-space:pre-wrap;line-height:1.8}
+.sheet .close{width:100%;padding:13px 0;border:none;border-top:1px solid var(--stone);background:var(--white);font-size:12px;letter-spacing:.24em;color:var(--moss)}
+.demo{position:fixed;left:12px;bottom:12px;background:rgba(43,43,40,.82);color:#DDD9CF;font-size:9px;letter-spacing:.2em;padding:5px 10px;border-radius:2px;z-index:40}
+</style>
+</head>
+<body>
+<div class="demo">PROTOTYPE v3 — Gemini無料枠</div>
+
+<div class="stage">
+  <div class="top">
+    <div class="brand"><span class="logo">PHERE</span><span class="app">投稿アシスタント PROTOTYPE</span></div>
+    <div class="steps"><span id="st1" class="on">① 撮る・選ぶ</span><span id="st2">② AIが下書き</span><span id="st3">③ OKで投稿</span></div>
+  </div>
+
+  <div class="view on" id="v1">
+    <div class="pad">
+      <h2>写真を入れるだけ。</h2>
+      <p class="sub">画面はデモ（12番）と同じ。違いはひとつ——<b>本物のAI</b>が写真を見て書くことだけです。</p>
+      <div class="tiles">
+        <button class="tile up" id="up">
+          <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M9 6l1.2-2h3.6L15 6"/></svg>
+          <span>写真を選ぶ／その場で撮る</span>
+        </button>
+        <div class="sect" style="grid-column:1/3">通信がないときは、下のデモ写真でも同じ流れを試せます</div>
+        <div id="demoTiles" style="display:contents"></div>
+      </div>
+      <input type="file" id="file" accept="image/*" style="display:none">
+      <input class="memo" id="memo" placeholder="ひとことメモ（任意）例：今週の花、ドウダンツツジ">
+      <input class="memo" id="gkey" placeholder="Gemini APIキー（AIza… / AQ.…／発行手順は18番）" autocomplete="off" style="font-size:11.5px">
+      <p class="hint">実写真＝Gemini無料枠で本番生成（約10秒・要通信）／デモ写真＝内蔵の下書きで即時。生成後の画面はどちらも同じです。</p>
+      <div class="errbox" id="err1"></div>
+    </div>
+  </div>
+
+  <div class="view gen" id="v2">
+    <div>
+      <div class="ph" id="genPh"></div>
+      <div class="dots">AIが写真を見て書いています<i></i><i></i><i></i></div>
+      <div class="mini" id="genNote">PHEREの署名・タグ様式を学習済み</div>
+    </div>
+  </div>
+
+  <div class="view appr" id="v3">
+    <div class="pad">
+      <h2>読んで、選んで、OKと返すだけ。</h2>
+      <p class="sub">いつもの温度のまま、3つの書き方から。文はタップして直せます。</p>
+      <div class="photo" id="apprPh"></div>
+      <div class="cands" id="cands"></div>
+      <button class="refreshb" id="refresh">↻ 別の3案を出す</button>
+      <div class="sig"><b>すべての案に自動で付きます</b><span id="sigline"></span></div>
+      <label class="dual"><input type="checkbox" id="dualpost" checked><span>ホームページの JOURNAL にも同時掲載する<small>phere-hair.com のブログに、同じ写真と文章が入ります（自動化はフェーズC）</small></span></label>
+      <div class="errbox" id="err"></div>
+      <p class="editnote">実運用では、この画面がLINEに届き、「OK」「2で」と返信するだけになります。※現時点のOKボタンは画面内プレビューまで——本物のInstagramへは、次の画面の「本文をコピー」→貼り付け（約30秒）で投稿します。</p>
+      <div class="btns">
+        <button class="btn" id="redo">やり直す</button>
+        <button class="btn solid" id="ok">OKと返信して投稿</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="v4">
+    <div class="prof">
+      <div class="row">
+        <div class="avatar">PHERE</div>
+        <div>
+          <div class="nm">phere_hair</div>
+          <div class="st">投稿 <b id="pc">19</b>　・　フォロワー 71</div>
+        </div>
+      </div>
+      <div class="bio"><b>PHERE</b><br>東京都目黒区鷹番3-1-2アーク石田ビル2F<br>営業時間10:00〜20:00　TEL 03-6412-8879<br>ご予約：beauty.hotpepper.jp/slnH000625274</div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="copybox" id="copybox" style="display:none">
+      <div class="ch">実運用メモ — できあがった本文（コピーしてそのまま使えます）</div>
+      <pre id="copytext"></pre>
+      <div class="cn">ここが現在の「実投稿への橋」です。Instagram アプリ／Meta Business Suite（予約投稿・無料）に貼れば今日から実運用できます（約30秒）。フェーズCでこの30秒も自動化され、OKボタンの先が本物に配線されます。</div>
+      <button class="cb" id="copy">本文をコピー</button>
+    </div>
+    <div class="reset"><button class="btn" id="again">最初からもう一度（別の写真で）</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">投稿しました（デモ）</div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <div class="img" id="mImg"></div>
+    <div class="body">
+      <div class="who">phere_hair</div>
+      <div class="cap" id="mCap"></div>
+      <div class="tg" id="mTag"></div>
+    </div>
+    <button class="close" id="mClose">閉じる</button>
+  </div>
+</div>
+
+<script>
+var GEMINI_KEY='';  // ←PHEREアカウントで発行した無料キーを貼ると入力欄が消えます
+try{var _mk=location.hash.match(/[#&]k=([^&]+)/); if(!GEMINI_KEY&&_mk){GEMINI_KEY=decodeURIComponent(_mk[1]);}}catch(_e){}
+var MODEL='gemini-3.5-flash';  // モデル名はAI Studioの現行表記に合わせて更新
+var SIG='PHERE\n\n目黒区鷹番3-1-2アーク石田ビル2F\n[学芸大学駅 徒歩1分]';
+var TONES=['いつもの温度','ひとこと添える','すこし語る'];
+
+function svgWrap(inner,tone){var bg=tone===2?'#E6E2D9':tone===3?'#EAE8E3':'#EDE9E1';
+return '<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="'+bg+'"/><rect width="200" height="200" fill="#8A8577" opacity=".05"/>'+inner+'</svg>';}
+var ART={
+ salon:function(t){return svgWrap('<path d="M0 26 L200 26 M0 40 L200 40" stroke="#C9C5BA" stroke-width="1.2"/><rect x="30" y="52" width="62" height="3" fill="#FBFAF7" stroke="#B4B0A4" stroke-width=".8"/><rect x="116" y="60" width="62" height="3" fill="#FBFAF7" stroke="#B4B0A4" stroke-width=".8"/><circle cx="86" cy="106" r="9" fill="none" stroke="#2B2B28" stroke-width="2"/><path d="M66 158 C66 128 106 128 106 158 L104 170 L68 170 Z" fill="none" stroke="#2B2B28" stroke-width="2"/><circle cx="132" cy="86" r="8" fill="none" stroke="#2B2B28" stroke-width="2"/><path d="M132 94 L132 140 M132 108 L114 118 M132 140 L126 170 M132 140 L140 170" fill="none" stroke="#2B2B28" stroke-width="2"/><path d="M20 176 L180 176" stroke="#B4B0A4" stroke-width="1.2"/>',t)},
+ flower:function(t){return svgWrap('<rect x="66" y="128" width="68" height="48" fill="#FBFAF7" stroke="#B5402F" stroke-width="1.4"/><path d="M66 144 L134 144 M66 160 L134 160 M83 128 L83 176 M100 128 L100 176 M117 128 L117 176" stroke="#B5402F" stroke-width="1.1"/><ellipse cx="100" cy="116" rx="17" ry="14" fill="none" stroke="#7E7A6E" stroke-width="1.6"/><path d="M100 104 C96 84 84 70 66 60 M100 104 C104 82 116 68 132 56 M100 104 C100 84 98 70 96 54" fill="none" stroke="#4A5A42" stroke-width="1.8"/><path d="M78 70 L70 64 M84 78 L76 74 M120 66 L128 60 M114 74 L122 70 M96 62 L90 56 M98 72 L92 68" stroke="#4A5A42" stroke-width="1.4"/>',t)},
+ tea:function(t){return svgWrap('<path d="M24 152 L176 152 L176 158 L24 158 Z" fill="none" stroke="#C89F6B" stroke-width="1.6"/><path d="M72 106 L128 106 L122 146 C120 152 114 152 108 152 L92 152 C86 152 80 152 78 146 Z" fill="none" stroke="#2B2B28" stroke-width="2"/><path d="M128 114 C142 114 144 132 128 138" fill="none" stroke="#2B2B28" stroke-width="1.8"/><path d="M92 92 C88 82 96 78 92 68 M108 94 C104 84 112 80 108 70" fill="none" stroke="#8A8577" stroke-width="1.4"/>',t)},
+ product:function(t){return svgWrap('<path d="M24 166 L176 166 L176 172 L24 172 Z" fill="none" stroke="#C89F6B" stroke-width="1.6"/><rect x="62" y="82" width="28" height="84" rx="6" fill="none" stroke="#2B2B28" stroke-width="1.8"/><rect x="70" y="68" width="12" height="14" fill="none" stroke="#2B2B28" stroke-width="1.8"/><rect x="106" y="94" width="28" height="72" rx="6" fill="none" stroke="#2B2B28" stroke-width="1.8"/><path d="M112 94 L112 82 L127 82 L127 75 L134 75" fill="none" stroke="#2B2B28" stroke-width="1.8"/><path d="M68 112 L84 112 M68 120 L84 120" stroke="#8A8577" stroke-width="1.2"/><path d="M110 124 L128 124 M110 132 L128 132" stroke="#8A8577" stroke-width="1.2"/>',t)},
+ books:function(t){return svgWrap('<path d="M20 96 L180 96 L180 102 L20 102 Z M20 168 L180 168 L180 174 L20 174 Z" fill="none" stroke="#C89F6B" stroke-width="1.6"/><rect x="44" y="40" width="42" height="56" fill="#2B2B28"/><path d="M52 54 L66 54 M52 62 L78 62 M52 70 L72 70 M52 78 L78 78" stroke="#EFECE5" stroke-width="2.4"/><rect x="112" y="46" width="40" height="50" fill="none" stroke="#2B2B28" stroke-width="1.8"/><circle cx="132" cy="66" r="9" fill="none" stroke="#8A8577" stroke-width="1.4"/><rect x="64" y="118" width="38" height="50" fill="none" stroke="#2B2B28" stroke-width="1.8"/><path d="M72 156 L94 156" stroke="#B5402F" stroke-width="1.6"/>',t)}
+};
+var CATS={
+ salon:{label:'カット・施術風景',art:'salon',tags:['#学芸大学美容室','#学大美容室','#メンズカット','#学大メンズカット'],caps:['cut ✂︎','cut ✂︎\n\n朝は、ワックスを揉み込んで30秒。','メンズショート。\n直毛で動きが出にくい方に、扱いやすいニュアンスをご提案しています。']},
+ flower:{label:'今週の花',art:'flower',tags:['#学芸大学美容室','#学大美容室','#花のある暮らし'],caps:['ドウダンツツジ。','花を替えました。今週はドウダンツツジ。','二週間に一度、店の花を替えています。\n席から見える緑が、すこし夏になりました。']},
+ tea:{label:'今月のお茶',art:'tea',tags:['#学芸大学美容室','#学大美容室','#お茶の時間'],caps:['今月のお茶。','今月のお茶は、水出しのほうじ茶。','カウンセリングの前に、季節のお茶を一杯。\n今月は水出しのほうじ茶です。']},
+ product:{label:'ピトレティカ',art:'product',tags:['#学芸大学美容室','#学大美容室','#pittoretiqua','#サロン専売'],caps:['pittoretiqua','pittoretiqua、入荷しました。','洗い上がりの軽さで選ぶなら。\n髪質に合わせて、一本ずつご提案しています。']}
+};
+var ALT={
+ salon:[["men's cut ✂︎","after。乾かしただけです。","刈り上げすぎない、耳まわりすっきりのショート。\n伸びても形が残るように切っています。"],["short ✂︎","本日のカット。","前髪は目にかからない長さで、束感をすこし。\n朝のセットは、指で整えるだけです。"]],
+ flower:[["スモークツリー。","枝ものが夏色になりました。","店の花は、いつも近所の花屋さんで。\n今週はスモークツリーです。"],["窓辺の緑。","窓辺の緑を替えました。","切り戻して、水を替えて。\n緑が長もちする季節になりました。"]],
+ tea:[["麦茶。","冷たい麦茶、はじめました。","お待ちの間のお茶を替えました。\n今月は香ばしいとうもろこし茶です。"],["本日のお茶。","今日のお茶は、すこし濃いめ。","施術の合間の一杯に。\n氷を多めの、夏仕様です。"]],
+ product:[["restock。","pittoretiqua、再入荷しました。","頭皮からすっきり洗いたい方に。\n使い方は施術のときにお伝えします。"],["pittoretiqua ✂︎","ホームケアのご相談が増えています。","シャンプーを替えるなら、まず一週間。\n違いは、乾かすときにわかります。"]]
+};
+var altIdx=0;
+var FEED=[
+ {art:'flower',t:2,cap:CATS.flower.caps[1],tags:CATS.flower.tags.join('\n')},
+ {art:'salon',t:1,cap:'cut ✂︎',tags:CATS.salon.tags.join('\n')},
+ {art:'books',t:3,cap:'倉俣史朗。',tags:'#学芸大学美容室\n#学大美容室\n#倉俣史朗'},
+ {art:'tea',t:1,cap:CATS.tea.caps[1],tags:CATS.tea.tags.join('\n')},
+ {art:'product',t:2,cap:CATS.product.caps[0],tags:CATS.product.tags.join('\n')},
+ {art:'salon',t:3,cap:CATS.salon.caps[2],tags:CATS.salon.tags.join('\n')},
+ {art:'flower',t:1,cap:'今週の花。',tags:CATS.flower.tags.join('\n')},
+ {art:'books',t:2,cap:'新しい一冊。',tags:'#学芸大学美容室\n#学大美容室'},
+ {art:'salon',t:2,cap:'cut ✂︎',tags:CATS.salon.tags.join('\n')}
+];
+var mode=null,curCat=null,imgB64=null,imgURL=null,data=null,sel=0,POSTED=0,refreshHint='';
+function $(i){return document.getElementById(i)}
+function show(v){['v1','v2','v3','v4'].forEach(function(x){$(x).classList.toggle('on',x===v)});window.scrollTo(0,0)}
+function steps(n){$('st1').className=n>1?'done':'on';$('st2').className=n===2?'on':n>2?'done':'';$('st3').className=n===3?'on':n>3?'done':''}
+
+if(GEMINI_KEY){$('gkey').style.display='none';}
+Object.keys(CATS).forEach(function(k){
+  var c=CATS[k],b=document.createElement('button');
+  b.className='tile';b.innerHTML=ART[c.art](1)+'<span class="lb">'+c.label+'（デモ）</span>';
+  b.onclick=function(){mode='demo';curCat=k;startGen()};
+  $('demoTiles').appendChild(b);
+});
+$('up').onclick=function(){$('file').click()};
+$('file').onchange=function(e){
+  var f=e.target.files[0]; if(!f) return;
+  e.target.value='';
+  $('up').innerHTML='<span style="letter-spacing:.18em;color:#9A968A;font-size:12px">写真を読み込んでいます…</span>';
+  function toCanvas(w,h,draw){var mx=1024,r=Math.min(1,mx/Math.max(w,h));var cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(w*r));cv.height=Math.max(1,Math.round(h*r));draw(cv.getContext('2d'),cv.width,cv.height);return cv;}
+  function done(cv){imgURL=cv.toDataURL('image/jpeg',.85);imgB64=imgURL.split(',')[1];
+    $('up').innerHTML='<img src="'+imgURL+'"><span class="re">変更</span>';
+    if($('err1')){$('err1').classList.remove('on');}
+    mode='photo';startGen();}
+  function fail(){
+    $('up').innerHTML='<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M9 6l1.2-2h3.6L15 6"/></svg><span>写真を選ぶ／その場で撮る</span>';
+    if($('err1')){$('err1').textContent='この写真を読み込めませんでした。別の写真かスクリーンショットでお試しください。（続く場合はiPhoneの設定→カメラ→フォーマットを「互換性優先」に）';$('err1').classList.add('on');}}
+  function readerPath(){var rd=new FileReader();
+    rd.onload=function(){var im=new Image();
+      im.onload=function(){done(toCanvas(im.naturalWidth||im.width,im.naturalHeight||im.height,function(ctx,w,h){ctx.drawImage(im,0,0,w,h)}));};
+      im.onerror=fail; im.src=rd.result;};
+    rd.onerror=fail; rd.readAsDataURL(f);}
+  if(window.createImageBitmap){
+    createImageBitmap(f,{imageOrientation:'from-image'})
+      .catch(function(){return createImageBitmap(f);})
+      .then(function(bmp){done(toCanvas(bmp.width,bmp.height,function(ctx,w,h){ctx.drawImage(bmp,0,0,w,h)}));})
+      .catch(function(){readerPath();});
+  }else{readerPath();}
+};
+
+function demoData(){
+  var c=CATS[curCat];
+  var caps = altIdx===0 ? c.caps : ALT[curCat][(altIdx-1)%ALT[curCat].length];
+  return {tones:caps.map(function(b,i){return{label:TONES[i],body:b}}),tags:c.tags};
+}
+function startGen(){
+  altIdx=0; refreshHint='';
+  $('err').classList.remove('on');
+  if($('err1')){$('err1').classList.remove('on');}
+  $('genPh').innerHTML = mode==='photo' ? '<img src="'+imgURL+'">' : ART[CATS[curCat].art](1);
+  $('genNote').textContent = mode==='photo' ? 'Gemini無料枠で本番生成中（約10秒）' : '内蔵デモ下書きを準備中';
+  steps(2);show('v2');
+  if(mode==='demo'){
+    setTimeout(function(){
+      data=demoData();
+      buildApprove();
+    },1600);
+  }else{ genReal(); }
+}
+async function genReal(){
+  var KEY=GEMINI_KEY||$('gkey').value.trim();
+  var memo=$('memo').value.trim();
+  var prompt='あなたは東京・学芸大学の美容室「PHERE」のSNS担当です。添付写真を見て、Instagramキャプションの本文だけを3案作成してください。\n様式：案1=いつもの温度（写真の被写体をひとことで。「ドウダンツツジ。」「cut ✂︎」のような名詞＋句点、絵文字は✂︎まで。記号だけの「.」は禁止）／案2=ひとこと添える（1文）／案3=すこし語る（2文まで）。静かで余白のある文体。絵文字は✂︎程度まで。誇大表現・医療的効能・他店比較は禁止。署名や住所は含めない。\n'+(memo?('メモ：'+memo+'\n'):'')+refreshHint+'次のJSONのみを返す：{"tones":[{"label":"いつもの温度","body":"..."},{"label":"ひとこと添える","body":"..."},{"label":"すこし語る","body":"..."}],"tags":["#学芸大学美容室","#学大美容室","（写真に合うタグ2〜3個）"]}';
+  try{
+    if(!KEY) throw new Error('APIキー未設定。これはキー無しの原本です——当日用はMacの「02_当日用」のキー入り17をAirDropでiPhoneへ（またはこの画面のキー欄に貼付）');
+    var rs=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+MODEL+':generateContent',{
+      method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':KEY},
+      body:JSON.stringify({contents:[{parts:[{inline_data:{mime_type:'image/jpeg',data:imgB64}},{text:prompt}]}],
+        generationConfig:{response_mime_type:'application/json',temperature:0.7}})});
+    var j=await rs.json();
+    if(j.error) throw new Error(j.error.message||'api error');
+    var txt=(((j.candidates||[])[0]||{}).content||{}).parts||[];
+    txt=txt.map(function(p){return p.text||''}).join('').replace(/```json|```/g,'').trim();
+    data=JSON.parse(txt);
+    if(!data.tones||data.tones.length<3) throw new Error('応答形式エラー');
+    buildApprove();
+  }catch(e){
+    var c=CATS.flower;
+    data={tones:c.caps.map(function(b,i){return{label:TONES[i],body:b}}),tags:c.tags};
+    buildApprove();
+    var el=$('err');el.textContent='AI接続に問題があったためデモ下書きを表示中：'+String(e.message||e).slice(0,180);el.classList.add('on');
+  }
+}
+function buildApprove(){
+  sel=0; refreshHint='';
+  var rb=$('refresh'); if(rb){rb.disabled=false; rb.textContent='↻ 別の3案を出す';}
+  $('apprPh').innerHTML = mode==='photo' ? '<img src="'+imgURL+'">' : ART[CATS[curCat].art](1);
+  $('sigline').textContent=SIG.replace(/\n+/g,' ／ ')+' ＋ '+(data.tags||[]).join(' ');
+  var box=$('cands');box.innerHTML='';
+  data.tones.forEach(function(t,i){
+    var d=document.createElement('div');d.className='cand'+(i===0?' sel':'');
+    d.innerHTML='<span class="no">案 '+(i+1)+'｜'+(t.label||TONES[i])+'</span><p contenteditable="true" spellcheck="false">'+t.body+'</p><span class="pick">'+(i===0?'選択中':'これにする')+'</span>';
+    d.onclick=function(e){if(e.target.tagName==='P')return;sel=i;
+      var cs=box.querySelectorAll('.cand');
+      for(var k=0;k<cs.length;k++){cs[k].classList.toggle('sel',k===i);cs[k].querySelector('.pick').textContent=k===i?'選択中':'これにする'}};
+    box.appendChild(d);
+  });
+  steps(3);show('v3');
+}
+$('redo').onclick=function(){steps(1);show('v1')};
+$('refresh').onclick=function(){
+  if(mode==='demo'){altIdx++;data=demoData();buildApprove();return;}
+  var rb=$('refresh');rb.disabled=true;rb.textContent='生成中…（約10秒）';
+  refreshHint='注意：直前に出した次の案（'+data.tones.map(function(t){return t.body.replace(/\n/g,'／')}).join('｜')+'）とは、語彙も視点も変えて別案を。\n';
+  genReal();
+};
+$('ok').onclick=function(){
+  var body=$('cands').querySelectorAll('.cand p')[sel].innerText.trim();
+  var tags=(data.tags||[]).join('\n');
+  FEED.unshift(mode==='photo'?{img:imgURL,cap:body,tags:tags,isNew:true}:{art:CATS[curCat].art,t:1,cap:body,tags:tags,isNew:true});
+  POSTED++;renderFeed();steps(4);show('v4');
+  var full=(body?body+'\n\n':'')+SIG+'\n\n'+tags;
+  $('copytext').textContent=full;$('copybox').style.display='block';
+  var t=$('toast');t.textContent=$('dualpost').checked?'プレビューに反映しました（インスタ＋JOURNAL想定）':'プレビューに反映しました（デモ）';
+  t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2200);
+};
+$('copy').onclick=function(){
+  navigator.clipboard.writeText($('copytext').textContent).then(function(){
+    var t=$('toast');t.textContent='コピーしました — そのまま貼って使えます';
+    t.classList.add('on');setTimeout(function(){t.classList.remove('on')},2200);
+  });
+};
+function renderFeed(){
+  var g=$('grid');g.innerHTML='';$('pc').textContent=19+POSTED;
+  FEED.forEach(function(p,i){
+    var b=document.createElement('button');b.className='cell'+(p.isNew&&i===0?' new':'');
+    b.innerHTML=(p.img?'<img src="'+p.img+'">':ART[p.art](p.t))+(p.isNew&&i===0?'<span class="badge">たった今</span>':'');
+    b.onclick=function(){
+      $('mImg').innerHTML=p.img?'<img src="'+p.img+'">':ART[p.art](p.t);
+      $('mCap').textContent=p.cap+'\n\n'+SIG;$('mTag').textContent=p.tags;
+      $('modal').classList.add('on');
+    };
+    g.appendChild(b);
+  });
+}
+$('mClose').onclick=function(){$('modal').classList.remove('on')};
+$('modal').onclick=function(e){if(e.target===$('modal'))$('modal').classList.remove('on')};
+$('again').onclick=function(){FEED.forEach(function(p){p.isNew=false});$('copybox').style.display='none';steps(1);show('v1')};
+</script>
+</body>
+</html>
