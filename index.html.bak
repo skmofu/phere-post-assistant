@@ -66,7 +66,7 @@ h2{font-weight:500;font-size:16.5px;letter-spacing:.16em}
 .refreshb{width:100%;margin-top:2px;padding:11px 0;font-size:11.5px;letter-spacing:.18em;border:1px dashed var(--stone);background:var(--white);color:var(--moss)}
 .refreshb:disabled{color:#C4C0B4;border-color:#E7E4DC}
 .editnote{font-size:10.5px;color:#9A968A;margin-top:10px}
-.errbox{display:none;margin-top:10px;border:1px solid #DDD9CF;background:#F5F2EC;color:#6E6A5F;font-size:11.5px;padding:10px 12px;line-height:1.7}
+.errbox{display:none;margin-top:10px;border:1px solid #D9B4A8;background:#FBF3F0;color:#8F4B3B;font-size:11.5px;padding:10px 12px;line-height:1.7}
 .errbox.on{display:block}
 .btns{display:flex;gap:10px;margin:16px 0 26px}
 .btn{flex:1;padding:14px 0;font-size:13px;letter-spacing:.2em;border:1px solid var(--ink);background:var(--white)}
@@ -200,7 +200,7 @@ h2{font-weight:500;font-size:16.5px;letter-spacing:.16em}
 <script>
 var GEMINI_KEY='';  // ←PHEREアカウントで発行した無料キーを貼ると入力欄が消えます
 try{var _mk=location.hash.match(/[#&]k=([^&]+)/); if(!GEMINI_KEY&&_mk){GEMINI_KEY=decodeURIComponent(_mk[1]);}}catch(_e){}
-var MODELS=['gemini-3.6-flash','gemini-flash-latest','gemini-3.5-flash'];var MODEL=MODELS[0];  // モデル名はAI Studioの現行表記に合わせて更新
+var MODEL='gemini-3.5-flash';  // モデル名はAI Studioの現行表記に合わせて更新
 var SIG='PHERE\n\n目黒区鷹番3-1-2アーク石田ビル2F\n[学芸大学駅 徒歩1分]';
 var TONES=['いつもの温度','ひとこと添える','すこし語る'];
 
@@ -299,27 +299,13 @@ async function genReal(){
   var memo=$('memo').value.trim();
   var prompt='あなたは東京・学芸大学の美容室「PHERE」のSNS担当です。添付写真を見て、Instagramキャプションの本文だけを3案作成してください。\n大原則：写真をまず素直に見て、写っているものをそのまま主役に書く。花・お茶・本・店内など施術以外の写真は、その情景と季節の投稿として書き、髪型・カラー・施術には結びつけない（花の写真に「〜のようなヘアカラー」等は書かない）。髪や施術そのものが写っているときだけ、髪について書く。\n様式：案1=いつもの温度（写真の被写体をひとことで。「ドウダンツツジ。」「cut ✂︎」のような名詞＋句点、絵文字は✂︎まで。記号だけの「.」は禁止）／案2=ひとこと添える（1文）／案3=すこし語る（2文まで。「ご来店お待ちしております」のような軽い季節の挨拶で締めるのは可）。ハッシュタグも被写体に合わせ、髪が写っていない写真にカラー名・スタイル名のタグは付けない。静かで余白のある文体。誇大表現・医療的効能・他店比較は禁止。署名や住所は含めない。\n'+(memo?('メモ：'+memo+'\n'):'')+refreshHint+'次のJSONのみを返す：{"tones":[{"label":"いつもの温度","body":"..."},{"label":"ひとこと添える","body":"..."},{"label":"すこし語る","body":"..."}],"tags":["#学芸大学美容室","#学大美容室","（写真に合うタグ2〜3個）"]}';
   try{
-    if(!KEY) throw new Error('NOKEY');
-    var payload=JSON.stringify({contents:[{parts:[{inline_data:{mime_type:'image/jpeg',data:imgB64}},{text:prompt}]}],
-        generationConfig:{response_mime_type:'application/json',temperature:0.7}});
-    var j=null,lastErr=null;
-    for(var mi=0;mi<MODELS.length&&!j;mi++){
-      for(var at=0;at<2;at++){
-        try{
-          var rs=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+MODELS[mi]+':generateContent',{
-            method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':KEY},body:payload});
-          var jj=await rs.json();
-          if(jj&&jj.error){
-            lastErr=new Error(jj.error.message||'api error');
-            var cd=jj.error.code||rs.status||0;
-            if((cd===429||cd===500||cd===503)&&at===0){ await new Promise(function(r){setTimeout(r,900)}); continue; }
-            break;
-          }
-          j=jj; break;
-        }catch(ne){ lastErr=ne; if(at===0){ await new Promise(function(r){setTimeout(r,900)}); } }
-      }
-    }
-    if(!j) throw (lastErr||new Error('no response'));
+    if(!KEY) throw new Error('APIキー未設定。これはキー無しの原本です——当日用はMacの「02_当日用」のキー入り17をAirDropでiPhoneへ（またはこの画面のキー欄に貼付）');
+    var rs=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+MODEL+':generateContent',{
+      method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':KEY},
+      body:JSON.stringify({contents:[{parts:[{inline_data:{mime_type:'image/jpeg',data:imgB64}},{text:prompt}]}],
+        generationConfig:{response_mime_type:'application/json',temperature:0.7}})});
+    var j=await rs.json();
+    if(j.error) throw new Error(j.error.message||'api error');
     var txt=(((j.candidates||[])[0]||{}).content||{}).parts||[];
     txt=txt.map(function(p){return p.text||''}).join('').replace(/```json|```/g,'').trim();
     data=JSON.parse(txt);
@@ -329,13 +315,7 @@ async function genReal(){
     var c=CATS.flower;
     data={tones:c.caps.map(function(b,i){return{label:TONES[i],body:b}}),tags:c.tags};
     buildApprove();
-    var _m=String((e&&e.message)||e);
-    try{console.warn('[PHERE] generate fallback:',_m);}catch(_x){}
-    var el=$('err');
-    el.textContent=(_m==='NOKEY')
-      ? 'こちらは見本ページです。お渡ししたリンクから開くと、お写真から下書きが作れます。'
-      : 'いま少し混み合っているようです。用意しておいた下書きを表示しています。「別の3案を出す」でもう一度おためしください。';
-    el.classList.add('on');
+    var el=$('err');el.textContent='AI接続に問題があったためデモ下書きを表示中：'+String(e.message||e).slice(0,180);el.classList.add('on');
   }
 }
 function buildApprove(){
