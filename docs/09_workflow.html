@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>写真→自動反映ワークフロー設計書 v2｜PHERE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --ink:#2B2B28; --ink2:#4A473F; --paper:#FBFAF7; --card:#FFFFFF;
+ --sand:#EFECE5; --sand2:#F5F2EC; --line:#E2DED4;
+ --muted:#8A8577; --muted2:#B4B0A4;
+ --brass:#C89F6B; --terra:#B5402F; --sage:#4A5A42; --sageL:#B9C0B8;
+ --r:14px; --shadow:0 2px 14px rgba(154,150,138,.16);
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+ font-family:'Hiragino Kaku Gothic ProN','Zen Kaku Gothic New','Yu Gothic Medium',sans-serif;
+ font-size:15px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 100px}
+
+/* ---- header ---- */
+header.top{padding:48px 0 30px}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;color:var(--brass);
+ border:1px solid var(--brass);border-radius:999px;padding:4px 13px;margin-bottom:18px}
+h1{font-size:clamp(25px,4.6vw,37px);line-height:1.35;letter-spacing:.01em;font-weight:700}
+.lead{margin-top:14px;color:var(--ink2);font-size:15px;max-width:62ch}
+.meta{margin-top:16px;font-size:12px;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:30px 0 0}
+
+/* ---- toc ---- */
+nav.toc{margin:26px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{font-size:12.5px;color:var(--ink2);text-decoration:none;background:var(--sand);
+ border-radius:999px;padding:6px 14px;transition:.15s}
+nav.toc a:hover{background:var(--ink);color:var(--paper)}
+
+/* ---- section ---- */
+section{margin-top:52px;scroll-margin-top:16px}
+h2{font-size:21px;font-weight:700;display:flex;align-items:center;gap:12px;line-height:1.4}
+h2 .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);
+ font-size:14px;display:grid;place-items:center;font-weight:700}
+h2 .sub{font-size:12.5px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+h3{font-size:16px;font-weight:700;margin:26px 0 10px}
+p{margin:12px 0;max-width:74ch}
+.small{font-size:13px;color:var(--muted)}
+strong{font-weight:700}
+a{color:var(--sage)}
+
+/* ---- cards ---- */
+.grid{display:grid;gap:14px;margin-top:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+ padding:20px;box-shadow:var(--shadow)}
+.card.tint{background:var(--sand);box-shadow:none}
+.card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card.dark .ct,.card.dark p{color:var(--muted2)}
+.ch{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ch .dot{flex:none;width:24px;height:24px;border-radius:50%;background:var(--brass);color:var(--ink);
+ font-size:12px;font-weight:700;display:grid;place-items:center}
+.ct{font-size:13.5px;color:var(--ink2);line-height:1.8}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:480px}
+th{background:var(--sand);text-align:left;font-weight:700;padding:11px 14px;
+ border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px;letter-spacing:.03em}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.75}
+tr:last-child td{border-bottom:none}
+td.num,th.num{width:44px;text-align:center;color:var(--muted);white-space:nowrap}
+.fill{display:inline-block;min-width:110px;border-bottom:1px dashed var(--muted2);height:1.3em}
+
+/* ---- callouts ---- */
+.note{margin-top:18px;border-radius:var(--r);padding:16px 18px;font-size:13.5px;line-height:1.8;
+ background:var(--sand2);border:1px solid var(--line)}
+.note.brass{background:#FAF4EA;border-color:#E8D5B8}
+.note.warn{background:#FBF3F0;border-color:#E4CCC4}
+.note.sage{background:#F0F3EF;border-color:#D2DBD0}
+.note .nt{font-weight:700;display:block;margin-bottom:5px;font-size:13px;letter-spacing:.03em}
+.note.brass .nt{color:#9A7440}.note.warn .nt{color:#8F4B3B}.note.sage .nt{color:var(--sage)}
+
+/* ---- flow ---- */
+.flow{margin-top:20px;display:grid;gap:0}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;
+ box-shadow:var(--shadow)}
+.fstep.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fstep.ink .fd{color:var(--muted2)}
+.fstep .fl{font-size:11px;letter-spacing:.12em;color:var(--brass);margin-bottom:5px}
+.fstep .fh{font-weight:700;font-size:16px}
+.fstep .fd{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.75}
+.arrow{justify-self:center;color:var(--brass);font-size:19px;line-height:1;padding:9px 0}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---- chips / steps ---- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.chip{background:var(--sand);border-radius:999px;padding:7px 15px;font-size:13px}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.br{background:var(--brass);color:var(--ink);font-weight:700}
+
+/* ---- phase timeline ---- */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.ph{border-radius:var(--r);padding:16px;background:var(--card);border:1px solid var(--line)}
+.ph .pn{font-size:11px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.ph .pt{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.ph .pd{font-size:12.5px;color:var(--ink2);line-height:1.75}
+.ph.p1{background:var(--sage);color:#fff;border-color:var(--sage)}
+.ph.p1 .pd,.ph.p1 .pn{color:#DCE4DA}
+.ph.p2{background:var(--sageL);border-color:var(--sageL)}
+.ph.p3{background:var(--sand);border-color:var(--sand)}
+.ph.p4{background:var(--sand2)}
+
+/* ---- checklist ---- */
+ul.check{list-style:none;margin-top:14px;display:grid;gap:9px}
+ul.check li{background:var(--card);border:1px solid var(--line);border-radius:11px;
+ padding:13px 16px 13px 44px;position:relative;font-size:14px;line-height:1.7}
+ul.check li:before{content:"";position:absolute;left:16px;top:16px;width:15px;height:15px;
+ border:1.6px solid var(--muted2);border-radius:4px}
+ul.bul{margin:12px 0 0 20px;display:grid;gap:7px;font-size:14px}
+ul.bul li{line-height:1.8}
+ol.steps{margin:14px 0 0 0;list-style:none;counter-reset:s;display:grid;gap:11px}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;font-size:14px;line-height:1.8}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:1px;width:27px;height:27px;
+ border-radius:50%;background:var(--sand);color:var(--ink);font-size:13px;font-weight:700;
+ display:grid;place-items:center}
+
+/* ---- misc ---- */
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.kpi .k{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:18px 20px}
+.kpi .kv{font-size:27px;font-weight:700;line-height:1.25}
+.kpi .kl{font-size:12px;color:var(--muted2);margin-top:5px}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:5px;background:var(--sand);
+ color:var(--ink2);margin-right:5px;white-space:nowrap}
+.tag.br{background:var(--brass);color:var(--ink);font-weight:700}
+.tag.sg{background:var(--sage);color:#fff}
+.tag.tr{background:var(--terra);color:#fff}
+footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
+ font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.backlink{display:inline-block;margin-top:24px;font-size:13px;color:var(--muted);text-decoration:none}
+.backlink:hover{color:var(--ink)}
+
+@media(max-width:760px){
+ body{font-size:14.5px}
+ .wrap{padding:0 15px 70px}
+ header.top{padding:30px 0 20px}
+ .g2,.g3,.g4,.phases,.kpi,.branch{grid-template-columns:1fr}
+ section{margin-top:38px}
+ h2{font-size:18.5px}
+}
+@media print{
+ body{background:#fff} nav.toc{display:none} .card,.tw{box-shadow:none}
+ section{break-inside:avoid} .backlink{display:none}
+}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+<span class="eyebrow">09 ／ ワークフロー設計 v2</span>
+<h1>写真1枚を、<br>ホームページとインスタへ。</h1>
+<p class="lead">美容師の仕事は「撮って送る」まで。サイトは新しく作らず、いまお持ちの phere-hair.com の世界観をそのまま活かします。追加費用は0円です。</p>
+<p class="meta">当日提示資料／設計 v2　最終更新：2026-08-13</p>
+<div class="rule"></div>
+</header>
+
+<nav class="toc">
+<a href="#zu">全体の流れ</a><a href="#rule">お願いする4つ</a><a href="#iri">入口の三段構え</a>
+<a href="#ura">裏側の仕組み</a><a href="#anzen">安全装置</a><a href="#phase">段階導入</a><a href="#todo">やること順</a>
+</nav>
+
+<section id="zu">
+<h2><span class="n">1</span><span>全体の流れ<span class="sub">　勉強会でこのまま見せる図</span></span></h2>
+<p>設計の考え方は一つだけです。<strong>お二人の仕事は「撮って送る」まで。</strong>そのあとは仕組みが引き受けます。</p>
+
+<div class="flow">
+  <div class="fstep">
+    <div class="fl">お二人</div>
+    <div class="fh">施術後・空き時間に、スマホでパシャ</div>
+    <div class="fd">入口はどれでも同じ場所に届きます。使いやすいものを選べば大丈夫です。</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="grid g3">
+    <div class="card tint"><div class="ch"><span class="dot">1</span>Googleドライブ</div>
+      <div class="ct">「PHERE 写真ポスト」に入れるだけ（2タップ）</div></div>
+    <div class="card tint"><div class="ch"><span class="dot">2</span>iPhoneの共有ボタン</div>
+      <div class="ct">「PHEREに送る」を選ぶだけ（1タップ・アプリ感覚）</div></div>
+    <div class="card tint"><div class="ch"><span class="dot">3</span>メールに添付</div>
+      <div class="ct">photo.phere@gmail.com（仮）へ送るだけ</div></div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="fstep ink">
+    <div class="fl">仕組みが自動でやること</div>
+    <div class="fh">写真を整えて、2か所へ同時に用意します</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="branch">
+    <div class="fstep">
+      <div class="fl">A ／ ホームページ</div>
+      <div class="fh">JOURNALに記事ができる</div>
+      <div class="fd">phere-hair.com のブログへ。取り消しがきくので全自動でも安心です。</div>
+    </div>
+    <div class="fstep">
+      <div class="fl">B ／ インスタ</div>
+      <div class="fh">下書きがお二人に届く</div>
+      <div class="fd">写真＋3つの温度の文章案。外に出るものなので、必ず人の確認を挟みます。</div>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="fstep">
+    <div class="fl">お二人</div>
+    <div class="fh">「OK」または「2で」と返すだけ</div>
+    <div class="fd">インスタとJOURNALに同時に載ります。ここが最後の関所です。</div>
+  </div>
+</div>
+
+<div class="note sage"><span class="nt">自動化の度合いは、取り消せるかどうかで分けています</span>
+ホームページの記事は、あとから下書きに戻せます。だから全自動でも安全です。インスタは一度出すと取り消せないので、必ずお二人の「OK」を待ちます。</div>
+
+<div class="note"><span class="nt">現在地（8/13時点）</span>
+AIの下書きと承認画面は本物です（17番＝公開URLでお二人の端末でも動きます。キーはURLで運び、サーバーにも保管場所にも残りません）。インスタへの投稿は、いまは「本文をコピー→Instagramに貼り付け（約30秒）」の橋渡し運用。JOURNALの自動化はホームページの管理情報が分かってからフェーズB、インスタの「OK→自動投稿」はフェーズCで配線します。</div>
+</section>
+
+<section id="rule">
+<h2><span class="n">2</span><span>お二人にお願いすること<span class="sub">　これだけです</span></span></h2>
+<div class="grid g2">
+  <div class="card"><div class="ch"><span class="dot">1</span>写真は入れるだけ</div>
+    <div class="ct">名前を変えたり、加工したりは必要ありません。撮ったまま送ってください。</div></div>
+  <div class="card"><div class="ch"><span class="dot">2</span>迷ったら「どちらでも」</div>
+    <div class="ct">分けたいときだけ「サイト用」「インスタ用」「どちらでも」のフォルダを使います。</div></div>
+  <div class="card"><div class="ch"><span class="dot">3</span>お客様が写るときは一言</div>
+    <div class="ct">撮る前にご同意を。いただけないときは後ろ姿や手元だけにします。</div></div>
+  <div class="card"><div class="ch"><span class="dot">4</span>週1〜隔週で3〜5枚</div>
+    <div class="ct">これで十分に回ります。多い日があっても、少ない週があっても大丈夫です。</div></div>
+</div>
+</section>
+
+<section id="iri">
+<h2><span class="n">3</span><span>入口の三段構え<span class="sub">　いまの形と、将来の形</span></span></h2>
+<div class="tw"><table>
+<tr><th>段階</th><th>入口</th><th>使いごこち</th><th>用意するもの</th></tr>
+<tr><td><span class="tag br">いま</span>勉強会の翌週〜</td>
+ <td><strong>Googleドライブ</strong>＋<strong>iPhoneの「PHEREに送る」</strong></td>
+ <td>写真を選んで共有→1タップ。ホーム画面に置けばアプリと同じ感覚です。</td>
+ <td>ゼロ。ショートカットはマスターが2台に設定（1台5分）</td></tr>
+<tr><td><span class="tag">副ルート</span></td>
+ <td>専用のGmailに添付して送信</td>
+ <td>メールに慣れた方の逃げ道として。</td><td>ゼロ</td></tr>
+<tr><td><span class="tag sg">将来</span>LINE公式の開設後</td>
+ <td><strong>LINEで写真を送るだけ</strong></td>
+ <td>いちばん自然な形。ここが最終形です。</td>
+ <td>受け口をマスターが実装（フェーズC以降）</td></tr>
+</table></div>
+<div class="note"><span class="nt">専用アプリは作りません</span>
+2名で回すお店に対して、アプリを持つと手入れの手間が見合いません。ドライブとショートカットで同じ体験が出せます。</div>
+</section>
+
+<section id="ura">
+<h2><span class="n">4</span><span>裏側の仕組み<span class="sub">　マスター用メモ</span></span></h2>
+<h3>パイプライン（Mac Studio・launchd 30分間隔）</h3>
+<ol class="steps">
+<li><strong>新着検知</strong>　Drive API ／ IMAP</li>
+<li><strong>前処理</strong>　HEIC→JPEG／リサイズ（WP用1600px・IG用1080px）／<strong>EXIF除去（位置情報）</strong>／知覚ハッシュで重複判定</li>
+<li><strong>分岐A：JOURNAL（全自動）</strong>　<code>POST /wp-json/wp/v2/media</code>（画像）→ <code>POST /wp-json/wp/v2/posts</code>（本文＝AI下書き・カテゴリJOURNAL）。認証はWP標準の<strong>アプリケーションパスワード</strong>（プラグイン不要）、Macのキーチェーン保管。誤投稿はWP上で下書き戻し／削除で即復旧</li>
+<li><strong>分岐B：インスタ（半自動）</strong>　3温度キャプション生成→承認依頼→「OK」検知→Meta Graph APIで投稿（JOURNAL同時掲載がONなら分岐Aも同時発火）</li>
+<li><strong>ログ</strong>　投稿台帳（何を・いつ・どこへ）</li>
+</ol>
+
+<h3>インスタ側の前提（第2回で一緒に）</h3>
+<p>@phere_hair のプロアカウント化＋FBページ連携 → Meta開発者アプリ → 長期トークン。暫定はMeta Business Suiteの予約投稿（人力5分／週）。</p>
+<div class="note warn"><span class="nt">順番に注意</span>
+作成直後の新規アカウントへ即座にAPI自動投稿を接続するのは、制限・凍結のリスクが最も高いパターン。まず手動投稿で2〜4週間の運用実績を作ってからフェーズCへ進む。</div>
+</section>
+
+<section id="anzen">
+<h2><span class="n">5</span><span>安全装置<span class="sub">　既存のSNS運用原則を移植</span></span></h2>
+<div class="grid g3">
+ <div class="card tint"><div class="ch">重複ハッシュ台帳</div><div class="ct">同じ写真を二度出さない</div></div>
+ <div class="card tint"><div class="ch">同一先30分間隔</div><div class="ct">連続投稿で足がつかないように</div></div>
+ <div class="card tint"><div class="ch">1日の上限</div><div class="ct">暴走したときの天井</div></div>
+ <div class="card tint"><div class="ch">投稿前チェック</div><div class="ct">承認済／重複なし／組違いなし</div></div>
+ <div class="card tint"><div class="ch">dry-run 1週間</div><div class="ct">本番前に空回しで検証</div></div>
+ <div class="card tint"><div class="ch">承認ゲート維持</div><div class="ct">承認なしの完全自動は当面やらない</div></div>
+</div>
+</section>
+
+<section id="phase">
+<h2><span class="n">6</span><span>段階導入<span class="sub">　あわてず4段階で</span></span></h2>
+<div class="phases">
+ <div class="ph p1"><div class="pn">PHASE A</div><div class="pt">勉強会の翌週〜</div>
+  <div class="pd">写真ポストの運用開始＋ショートカット設定。JOURNALはマスターが手で投入、インスタは17番で生成→コピー→貼り付け（30秒／回）</div></div>
+ <div class="ph p2"><div class="pn">PHASE B</div><div class="pt">2〜4週</div>
+  <div class="pd">WordPressへの自動投稿（分岐A）が稼働</div></div>
+ <div class="ph p3"><div class="pn">PHASE C</div><div class="pt">1〜2ヶ月</div>
+  <div class="pd">インスタの半自動（承認ゲート）＋JOURNAL同時掲載</div></div>
+ <div class="ph p4"><div class="pn">PHASE D</div><div class="pt">安定後</div>
+  <div class="pd">LINE入稿口の追加、月次の効果レポート自動生成</div></div>
+</div>
+<div class="kpi">
+ <div class="k"><div class="kv">追加 0円</div><div class="kl">ドライブ・ショートカット・WordPress・Meta、すべて無料の範囲</div></div>
+ <div class="k"><div class="kv">週1〜隔週</div><div class="kl">お二人にお願いする頻度。1回3〜5枚</div></div>
+ <div class="k"><div class="kv">約30秒</div><div class="kl">いま残っている手作業。フェーズCで消えます</div></div>
+</div>
+</section>
+
+<section id="todo">
+<h2><span class="n">7</span><span>マスターTODO<span class="sub">　この順番で</span></span></h2>
+<ul class="check">
+<li>第0回でホームページの管理情報の所在を確認（07シート D-2）→ 編集者権限のアカウント＋アプリケーションパスワードを発行</li>
+<li>WordPressにJOURNALカテゴリを作成・トップに最新3件枠（差分モック①②の実装）</li>
+<li>watcher実装（作業役＝Sonnet系、公開に関わる操作＝Fable／人間）→ dry-run</li>
+<li>第2回でインスタのプロアカウント化に同席 → フェーズCへ</li>
+</ul>
+</section>
+
+<a class="backlink" href="index.html">← 資料一覧にもどる</a>
+<footer><span>美容室PHERE ／ AI導入プロジェクト</span><span>作成：Fable</span></footer>
+</div></body></html>

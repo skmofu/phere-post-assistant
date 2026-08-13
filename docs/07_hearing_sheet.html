@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>第0回ヒアリングシート｜PHERE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --ink:#2B2B28; --ink2:#4A473F; --paper:#FBFAF7; --card:#FFFFFF;
+ --sand:#EFECE5; --sand2:#F5F2EC; --line:#E2DED4;
+ --muted:#8A8577; --muted2:#B4B0A4;
+ --brass:#C89F6B; --terra:#B5402F; --sage:#4A5A42; --sageL:#B9C0B8;
+ --r:14px; --shadow:0 2px 14px rgba(154,150,138,.16);
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+ font-family:'Hiragino Kaku Gothic ProN','Zen Kaku Gothic New','Yu Gothic Medium',sans-serif;
+ font-size:15px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 100px}
+
+/* ---- header ---- */
+header.top{padding:48px 0 30px}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;color:var(--brass);
+ border:1px solid var(--brass);border-radius:999px;padding:4px 13px;margin-bottom:18px}
+h1{font-size:clamp(25px,4.6vw,37px);line-height:1.35;letter-spacing:.01em;font-weight:700}
+.lead{margin-top:14px;color:var(--ink2);font-size:15px;max-width:62ch}
+.meta{margin-top:16px;font-size:12px;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:30px 0 0}
+
+/* ---- toc ---- */
+nav.toc{margin:26px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{font-size:12.5px;color:var(--ink2);text-decoration:none;background:var(--sand);
+ border-radius:999px;padding:6px 14px;transition:.15s}
+nav.toc a:hover{background:var(--ink);color:var(--paper)}
+
+/* ---- section ---- */
+section{margin-top:52px;scroll-margin-top:16px}
+h2{font-size:21px;font-weight:700;display:flex;align-items:center;gap:12px;line-height:1.4}
+h2 .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);
+ font-size:14px;display:grid;place-items:center;font-weight:700}
+h2 .sub{font-size:12.5px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+h3{font-size:16px;font-weight:700;margin:26px 0 10px}
+p{margin:12px 0;max-width:74ch}
+.small{font-size:13px;color:var(--muted)}
+strong{font-weight:700}
+a{color:var(--sage)}
+
+/* ---- cards ---- */
+.grid{display:grid;gap:14px;margin-top:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+ padding:20px;box-shadow:var(--shadow)}
+.card.tint{background:var(--sand);box-shadow:none}
+.card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card.dark .ct,.card.dark p{color:var(--muted2)}
+.ch{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ch .dot{flex:none;width:24px;height:24px;border-radius:50%;background:var(--brass);color:var(--ink);
+ font-size:12px;font-weight:700;display:grid;place-items:center}
+.ct{font-size:13.5px;color:var(--ink2);line-height:1.8}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:480px}
+th{background:var(--sand);text-align:left;font-weight:700;padding:11px 14px;
+ border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px;letter-spacing:.03em}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.75}
+tr:last-child td{border-bottom:none}
+td.num,th.num{width:44px;text-align:center;color:var(--muted);white-space:nowrap}
+.fill{display:inline-block;min-width:110px;border-bottom:1px dashed var(--muted2);height:1.3em}
+
+/* ---- callouts ---- */
+.note{margin-top:18px;border-radius:var(--r);padding:16px 18px;font-size:13.5px;line-height:1.8;
+ background:var(--sand2);border:1px solid var(--line)}
+.note.brass{background:#FAF4EA;border-color:#E8D5B8}
+.note.warn{background:#FBF3F0;border-color:#E4CCC4}
+.note.sage{background:#F0F3EF;border-color:#D2DBD0}
+.note .nt{font-weight:700;display:block;margin-bottom:5px;font-size:13px;letter-spacing:.03em}
+.note.brass .nt{color:#9A7440}.note.warn .nt{color:#8F4B3B}.note.sage .nt{color:var(--sage)}
+
+/* ---- flow ---- */
+.flow{margin-top:20px;display:grid;gap:0}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;
+ box-shadow:var(--shadow)}
+.fstep.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fstep.ink .fd{color:var(--muted2)}
+.fstep .fl{font-size:11px;letter-spacing:.12em;color:var(--brass);margin-bottom:5px}
+.fstep .fh{font-weight:700;font-size:16px}
+.fstep .fd{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.75}
+.arrow{justify-self:center;color:var(--brass);font-size:19px;line-height:1;padding:9px 0}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---- chips / steps ---- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.chip{background:var(--sand);border-radius:999px;padding:7px 15px;font-size:13px}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.br{background:var(--brass);color:var(--ink);font-weight:700}
+
+/* ---- phase timeline ---- */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.ph{border-radius:var(--r);padding:16px;background:var(--card);border:1px solid var(--line)}
+.ph .pn{font-size:11px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.ph .pt{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.ph .pd{font-size:12.5px;color:var(--ink2);line-height:1.75}
+.ph.p1{background:var(--sage);color:#fff;border-color:var(--sage)}
+.ph.p1 .pd,.ph.p1 .pn{color:#DCE4DA}
+.ph.p2{background:var(--sageL);border-color:var(--sageL)}
+.ph.p3{background:var(--sand);border-color:var(--sand)}
+.ph.p4{background:var(--sand2)}
+
+/* ---- checklist ---- */
+ul.check{list-style:none;margin-top:14px;display:grid;gap:9px}
+ul.check li{background:var(--card);border:1px solid var(--line);border-radius:11px;
+ padding:13px 16px 13px 44px;position:relative;font-size:14px;line-height:1.7}
+ul.check li:before{content:"";position:absolute;left:16px;top:16px;width:15px;height:15px;
+ border:1.6px solid var(--muted2);border-radius:4px}
+ul.bul{margin:12px 0 0 20px;display:grid;gap:7px;font-size:14px}
+ul.bul li{line-height:1.8}
+ol.steps{margin:14px 0 0 0;list-style:none;counter-reset:s;display:grid;gap:11px}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;font-size:14px;line-height:1.8}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:1px;width:27px;height:27px;
+ border-radius:50%;background:var(--sand);color:var(--ink);font-size:13px;font-weight:700;
+ display:grid;place-items:center}
+
+/* ---- misc ---- */
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.kpi .k{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:18px 20px}
+.kpi .kv{font-size:27px;font-weight:700;line-height:1.25}
+.kpi .kl{font-size:12px;color:var(--muted2);margin-top:5px}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:5px;background:var(--sand);
+ color:var(--ink2);margin-right:5px;white-space:nowrap}
+.tag.br{background:var(--brass);color:var(--ink);font-weight:700}
+.tag.sg{background:var(--sage);color:#fff}
+.tag.tr{background:var(--terra);color:#fff}
+footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
+ font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.backlink{display:inline-block;margin-top:24px;font-size:13px;color:var(--muted);text-decoration:none}
+.backlink:hover{color:var(--ink)}
+
+@media(max-width:760px){
+ body{font-size:14.5px}
+ .wrap{padding:0 15px 70px}
+ header.top{padding:30px 0 20px}
+ .g2,.g3,.g4,.phases,.kpi,.branch{grid-template-columns:1fr}
+ section{margin-top:38px}
+ h2{font-size:18.5px}
+}
+@media print{
+ body{background:#fff} nav.toc{display:none} .card,.tw{box-shadow:none}
+ section{break-inside:avoid} .backlink{display:none}
+}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+<span class="eyebrow">07 ／ 第0回ヒアリングシート（記入式）</span>
+<h1>はじめに、<br>いまを一度そろえる。</h1>
+<p class="lead">勉強会の前にマスターが確認する項目です。この画面にそのまま書き込めます。埋まっていない欄があっても進みます。お二人の負担にしないことが最優先。</p>
+<p class="meta">第0回で使用　最終更新：2026-08-13</p>
+<div class="rule"></div>
+</header>
+
+<style>
+input.f,textarea.f{font-family:inherit;font-size:13.5px;color:var(--ink);background:#FFFDF9;
+ border:1px solid var(--line);border-radius:7px;padding:7px 10px;width:100%;line-height:1.7;
+ transition:.14s;-webkit-appearance:none}
+input.f{min-width:80px}
+input.f:focus,textarea.f:focus{outline:none;border-color:var(--brass);background:#fff;
+ box-shadow:0 0 0 3px rgba(200,159,107,.16)}
+input.f.s{width:96px;display:inline-block}
+input.f.m{width:150px;display:inline-block}
+textarea.f{min-height:64px;resize:vertical;display:block}
+.radio{display:inline-flex;gap:5px;flex-wrap:wrap}
+.radio label{cursor:pointer;user-select:none}
+.radio input{position:absolute;opacity:0;width:0;height:0}
+.radio span{display:inline-block;font-size:12.5px;border:1px solid var(--line);border-radius:999px;
+ padding:5px 14px;background:#FFFDF9;transition:.14s}
+.radio input:checked+span{background:var(--sage);border-color:var(--sage);color:#fff;font-weight:700}
+.radio input:focus-visible+span{box-shadow:0 0 0 3px rgba(200,159,107,.3)}
+.memo{margin-top:18px;background:var(--sand2);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.memo .ml2{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;margin-bottom:8px;
+ display:flex;align-items:center;gap:7px}
+.memo .ml2:before{content:"";width:13px;height:13px;border-radius:3px;background:var(--brass);flex:none}
+.bar{position:sticky;top:0;z-index:40;background:rgba(251,250,247,.94);backdrop-filter:blur(8px);
+ border-bottom:1px solid var(--line);margin:0 -20px 0;padding:11px 20px;display:flex;
+ gap:9px;align-items:center;flex-wrap:wrap}
+.bar button{font-family:inherit;font-size:12.5px;border:1px solid var(--line);background:#fff;
+ color:var(--ink);border-radius:8px;padding:8px 15px;cursor:pointer;transition:.14s}
+.bar button:hover{background:var(--sand)}
+.bar button.pri{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.bar button.pri:hover{background:#3D3D35}
+.bar .st{font-size:11.5px;color:var(--muted);margin-left:auto;white-space:nowrap}
+.bar .st.on{color:var(--sage);font-weight:700}
+.privacy{margin-top:16px;background:#F0F3EF;border:1px solid #D2DBD0;border-radius:12px;
+ padding:15px 18px;font-size:13px;line-height:1.85}
+.privacy b{color:var(--sage)}
+@media(max-width:760px){.bar{margin:0 -15px;padding:10px 15px}.bar .st{width:100%;margin:2px 0 0;text-align:right}}
+@media print{.bar,.privacy{display:none}
+ input.f,textarea.f{border:none;border-bottom:1px solid #bbb;border-radius:0;background:none;padding:2px 0}
+ textarea.f{border:1px solid #ddd;padding:6px}
+ .radio span{border:1px solid #bbb;background:none}
+ .radio input:checked+span{background:#ddd;color:#000}}
+</style>
+
+<div class="bar">
+<button class="pri" onclick="phExport()">ファイルに書き出す</button>
+<button onclick="phImport()">読み込む</button>
+<button onclick="phText()">文字でコピー</button>
+<button onclick="window.print()">印刷 / PDF</button>
+<button onclick="phClear()">消去</button>
+<span class="st" id="stat">入力すると自動で保存されます</span>
+</div>
+
+<div class="note brass"><span class="nt">使い方</span>
+そのままお二人にお渡ししても、雑談しながらマスターが聞き取って埋めても構いません。
+「わからない・調べ方が不明」の項目は、当日いっしょに画面を見ながら確認すればOKです。<strong>お二人に宿題として渡さないこと</strong>が大事です。</div>
+
+<div class="privacy">
+<b>入力した内容の扱い</b>　書き込んだ内容は<b>この端末の中だけ</b>に保存されます。インターネット上には送られません。
+別の端末に移すときは「ファイルに書き出す」で保存し、移した先で「読み込む」を押してください。<br>
+※パスワードそのものは書かないでください。このシートで聞いているのは「<b>誰が持っているか</b>」だけです。
+</div>
+
+
+<nav class="toc">
+<a href="#a">A 数字</a><a href="#b">B HPB契約</a><a href="#c">C 仕入れ</a>
+<a href="#d">D デジタル資産</a><a href="#d2">D-2 ホームページ</a><a href="#e">E お二人の声</a>
+<a href="#f">F 当日までの準備</a><a href="#g">総合メモ</a>
+</nav>
+
+<div class="kpi">
+ <div class="k"><div class="kv">D-2</div><div class="kl">今回いちばん重要。ホームページの管理情報の所在</div></div>
+ <div class="k"><div class="kv">B-3</div><div class="kl">HPBの満了月。見直しができる唯一のタイミング</div></div>
+ <div class="k"><div class="kv">E</div><div class="kl">当日の温度設計。ここは雑談で十分</div></div>
+</div>
+
+<section id="a">
+<h2><span class="n">A</span><span>サロンボードから抜く数字<span class="sub">　直近3ヶ月分</span></span></h2>
+<p class="small">サロンボード＝HPB掲載サロンが使う無料の予約・顧客管理画面。「集計」メニューから確認できます。</p>
+<div class="tw"><table>
+<tr><th class="num">#</th><th>項目</th><th>記入欄</th><th>見る場所の目安</th></tr>
+<tr><td class="num">1</td><td>月間総客数</td><td><input class="f s" data-k="a1" data-l="月間総客数"> 名</td><td>集計＞来店実績</td></tr><tr><td class="num">2</td><td>うち新規客数／再来客数</td><td>新規 <input class="f s" data-k="a2n" data-l="新規客数"> ／ 再来 <input class="f s" data-k="a2r" data-l="再来客数"></td><td>同上</td></tr><tr><td class="num">3</td><td>予約経路の内訳</td><td>HPBネット <input class="f s" data-k="a3a" data-l="予約経路：HPBネット">／電話 <input class="f s" data-k="a3b" data-l="予約経路：電話">／店頭次回 <input class="f s" data-k="a3c" data-l="予約経路：店頭次回"></td><td>予約一覧の経路</td></tr><tr><td class="num">4</td><td>平均客単価（新規／再来）</td><td>新規 ¥<input class="f s" data-k="a4n" data-l="客単価：新規"> ／ 再来 ¥<input class="f s" data-k="a4r" data-l="客単価：再来"></td><td>集計＞売上</td></tr><tr><td class="num">5</td><td>店販売上／月</td><td>¥<input class="f m" data-k="a5" data-l="店販売上／月"></td><td>会計データ</td></tr><tr><td class="num">6</td><td>次回予約率</td><td><input class="f s" data-k="a6" data-l="次回予約率"> %</td><td>なければ体感値で</td></tr><tr><td class="num">7</td><td>平均来店サイクル</td><td><input class="f s" data-k="a7" data-l="平均来店サイクル"> 日</td><td>なければ体感値で</td></tr><tr><td class="num">8</td><td>新規のリピート率（2回目来店率）</td><td><input class="f s" data-k="a8" data-l="新規リピート率"> %</td><td>集計＞リピート</td></tr><tr><td class="num">9</td><td>キャンセル・無断キャンセル率</td><td><input class="f s" data-k="a9" data-l="キャンセル率"> %</td><td>予約一覧</td></tr><tr><td class="num">10</td><td>客層（男女比・年代の体感）</td><td><input class="f" data-k="a10" data-l="客層"></td><td>体感でOK</td></tr><tr><td class="num">11</td><td>曜日・時間帯の空き傾向</td><td><input class="f" data-k="a11" data-l="空き傾向"></td><td>予約台帳</td></tr><tr><td class="num">12</td><td>繁忙月・閑散月</td><td><input class="f" data-k="a12" data-l="繁忙月・閑散月"></td><td>年間の体感</td></tr>
+</table></div>
+<div class="memo"><div class="ml2">Aのメモ</div><textarea class="f" data-k="mA" data-l="Aのメモ" placeholder="数字を見ながら気づいたこと、あとで確かめたいこと"></textarea></div>
+</section>
+
+<section id="b">
+<h2><span class="n">B</span><span>HPB契約の確認<span class="sub">　契約書 or 営業担当へ</span></span></h2>
+<div class="tw"><table>
+<tr><th class="num">#</th><th>項目</th><th>記入欄</th></tr>
+<tr><td class="num">1</td><td>掲載プラン名</td><td><input class="f" data-k="b1" data-l="HPB掲載プラン名"></td></tr><tr><td class="num">2</td><td>月額掲載料（税込）</td><td>¥<input class="f m" data-k="b2" data-l="HPB月額掲載料"></td></tr><tr><td class="num">3</td><td><strong>契約期間・満了月（更新月）</strong></td><td><input class="f s" data-k="b3y" data-l="HPB満了 年"> 年 <input class="f s" data-k="b3m" data-l="HPB満了 月"> 月</td></tr><tr><td class="num">4</td><td>予約手数料の請求実績（月あたり）</td><td>¥<input class="f m" data-k="b4" data-l="HPB手数料の請求実績"></td></tr><tr><td class="num">5</td><td>中途解約・プラン変更の条件</td><td><input class="f" data-k="b5" data-l="解約・プラン変更の条件"></td></tr><tr><td class="num">6</td><td>HPB WORK（求人）の契約有無と費用</td><td><input class="f" data-k="b6" data-l="HPB WORK"></td></tr><tr><td class="num">7</td><td>営業担当の連絡先</td><td><input class="f" data-k="b7" data-l="HPB営業担当の連絡先"></td></tr>
+</table></div>
+<div class="note"><span class="nt">3番は必ず特定する</span>満了月は、条件を見直せる唯一のタイミングです。</div>
+<div class="memo"><div class="ml2">Bのメモ</div><textarea class="f" data-k="mB" data-l="Bのメモ" placeholder="契約書のどこに書いてあったか、担当者の言い回し など"></textarea></div>
+</section>
+
+<section id="c">
+<h2><span class="n">C</span><span>ピトレティカ／ディーラーへの確認<span class="sub">　次回訪問時 or 電話</span></span></h2>
+<div class="tw"><table>
+<tr><th class="num">#</th><th>質問</th><th>記入欄</th></tr>
+<tr><td class="num">1</td><td>「BEAUTY CITY」にPHEREとして参加できるか。登録条件は</td><td><input class="f" data-k="c1" data-l="BEAUTY CITY 参加可否・条件"></td></tr><tr><td class="num">2</td><td>お客様がBEAUTY CITY経由で購入した場合のサロン還元</td><td><input class="f" data-k="c2" data-l="サロン還元"></td></tr><tr><td class="num">3</td><td>お客様の登録フロー（店頭でどう案内するか）</td><td><input class="f" data-k="c3" data-l="登録フロー"></td></tr><tr><td class="num">4</td><td>店販商品の掛率（仕入原価率）</td><td><input class="f s" data-k="c4" data-l="店販の掛率"> %</td></tr><tr><td class="num">5</td><td>最低発注ロット・納期</td><td><input class="f" data-k="c5" data-l="最低ロット・納期"></td></tr><tr><td class="num">6</td><td>販促物（テスター・POP・サンプル）の提供有無</td><td><input class="f" data-k="c6" data-l="販促物"></td></tr><tr><td class="num">7</td><td>ネット販売に関する正規流通上の禁止事項</td><td><input class="f" data-k="c7" data-l="ネット販売の禁止事項"></td></tr>
+</table></div>
+<div class="memo"><div class="ml2">Cのメモ</div><textarea class="f" data-k="mC" data-l="Cのメモ" placeholder="誰に聞いたか、次にいつ聞くか など"></textarea></div>
+</section>
+
+<section id="d">
+<h2><span class="n">D</span><span>デジタル資産の棚卸し</span></h2>
+<div class="tw"><table>
+<tr><th class="num">#</th><th>項目</th><th>記入欄</th></tr>
+<tr><td class="num">1</td><td>Instagram @phere_hair のログイン情報は誰が持っているか</td><td><input class="f" data-k="d1" data-l="IGログインの保持者"></td></tr><tr><td class="num">2</td><td>現在のフォロワー数・最終投稿日</td><td><input class="f" data-k="d2" data-l="IGフォロワー数・最終投稿日"></td></tr><tr><td class="num">3</td><td>ストック画像の保管場所と枚数感</td><td><input class="f" data-k="d3" data-l="ストック画像の保管場所"></td></tr><tr><td class="num">4</td><td>Googleビジネスプロフィールのオーナー確認</td><td><div class="radio"><label><input type="radio" name="d4" value="済" data-k="d4" data-l="GBPオーナー確認"><span>済</span></label><label><input type="radio" name="d4" value="未" data-k="d4" data-l="GBPオーナー確認"><span>未</span></label><label><input type="radio" name="d4" value="不明" data-k="d4" data-l="GBPオーナー確認"><span>不明</span></label></div></td></tr><tr><td class="num">5</td><td>Googleの口コミ件数・評価（現状）</td><td><input class="f s" data-k="d5c" data-l="Google口コミ件数"> 件・評価 <input class="f s" data-k="d5r" data-l="Google評価"></td></tr><tr><td class="num">6</td><td>LINE公式アカウントの有無</td><td><div class="radio"><label><input type="radio" name="d6" value="有" data-k="d6" data-l="LINE公式の有無"><span>有</span></label><label><input type="radio" name="d6" value="無" data-k="d6" data-l="LINE公式の有無"><span>無</span></label></div></td></tr><tr><td class="num">7</td><td>独自ドメイン・HPの保有歴</td><td><input class="f" data-k="d7" data-l="ドメイン・HP保有歴"></td></tr><tr><td class="num">8</td><td>店のGoogleアカウント（Gmail）の有無</td><td><input class="f" data-k="d8" data-l="店のGoogleアカウント"></td></tr><tr><td class="num">9</td><td>レジ・決済手段（現金／カード／QR）</td><td><input class="f" data-k="d9" data-l="決済手段"></td></tr><tr><td class="num">10</td><td>会計・経理の方法</td><td><input class="f" data-k="d10" data-l="会計・経理の方法"></td></tr>
+</table></div>
+<div class="memo"><div class="ml2">Dのメモ</div><textarea class="f" data-k="mD" data-l="Dのメモ" placeholder="気づいたこと、言い回し、次に確認すること など"></textarea></div>
+</section>
+
+<section id="d2">
+<h2><span class="n">D2</span><span>既存ホームページ phere-hair.com の管理情報<span class="sub">　最重要</span></span></h2>
+<div class="note brass"><span class="nt">当日ここだけは押さえる</span>
+1番（誰がログイン情報を持っているか）が分かれば、JOURNALの自動更新が動き出します。他は後日でも構いません。<br>
+<strong>パスワードそのものは書かないでください。</strong>「誰が持っているか」だけで十分です。</div>
+<div class="tw"><table>
+<tr><th class="num">#</th><th>項目</th><th>記入欄</th></tr>
+<tr><td class="num">1</td><td><strong>WordPressのログイン情報は誰が持っているか（URL・ID）</strong></td><td><input class="f" data-k="e1" data-l="WPログインの保持者・URL・ID"></td></tr><tr><td class="num">2</td><td>サイトを作ったのは誰か・今も連絡がつくか</td><td><input class="f" data-k="e2" data-l="サイト制作者"></td></tr><tr><td class="num">3</td><td>サーバーはどこと契約か（会社名・名義・年額・更新月）</td><td><input class="f" data-k="e3" data-l="サーバー契約"></td></tr><tr><td class="num">4</td><td>ドメイン phere-hair.com の管理はどこか（自動更新の有無）</td><td><input class="f" data-k="e4" data-l="ドメイン管理"></td></tr><tr><td class="num">5</td><td>Search Console／Analytics（Site Kit）の権限者</td><td><input class="f" data-k="e5" data-l="Site Kitの権限者"></td></tr><tr><td class="num">6</td><td>バックアップを取ったことがあるか</td><td><div class="radio"><label><input type="radio" name="e6" value="有" data-k="e6" data-l="バックアップ経験"><span>有</span></label><label><input type="radio" name="e6" value="無" data-k="e6" data-l="バックアップ経験"><span>無</span></label><label><input type="radio" name="e6" value="不明" data-k="e6" data-l="バックアップ経験"><span>不明</span></label></div></td></tr><tr><td class="num">7</td><td>最終更新はいつ・誰が行ったか</td><td><input class="f" data-k="e7" data-l="最終更新"></td></tr>
+</table></div>
+<div class="memo"><div class="ml2">D-2のメモ</div><textarea class="f" data-k="mE" data-l="D-2のメモ" placeholder="誰に連絡すればよさそうか、次の一手 など"></textarea></div>
+</section>
+
+<section id="e">
+<h2><span class="n">E</span><span>お二人へのヒアリング<span class="sub">　当日の温度設計用・雑談で十分</span></span></h2>
+<h3>1．施術以外で一番時間を取られている仕事は？（上位3つ）</h3><textarea class="f" data-k="f1" data-l="施術以外で一番時間を取られている仕事は？（上位3つ）"></textarea><h3>2．集客・求人・仕入れのうち、いま一番痛いのはどれ？その理由は？</h3><textarea class="f" data-k="f2" data-l="集客・求人・仕入れのうち、いま一番痛いのはどれ？その理由は？"></textarea><h3>3．1日のタイムテーブル（開店前・空き時間・閉店後に何をしているか）</h3><textarea class="f" data-k="f3" data-l="1日のタイムテーブル（開店前・空き時間・閉店後に何をしているか）"></textarea><h3>4．スマホの機種（iPhone／Android）とPCの有無</h3><textarea class="f" data-k="f4" data-l="スマホの機種（iPhone／Android）とPCの有無"></textarea><h3>5．SNSやITへの苦手意識はどのあたり？（文章／写真／機械操作／時間がない）</h3><textarea class="f" data-k="f5" data-l="SNSやITへの苦手意識はどのあたり？（文章／写真／機械操作／時間がない）"></textarea><h3>6．1年後、お店がどうなっていたら最高？（売上／働き方／お客さま）</h3><textarea class="f" data-k="f6" data-l="1年後、お店がどうなっていたら最高？（売上／働き方／お客さま）"></textarea><h3>7．勉強会に期待すること・不安なこと</h3><textarea class="f" data-k="f7" data-l="勉強会に期待すること・不安なこと"></textarea>
+</section>
+
+<section id="f">
+<h2><span class="n">F</span><span>当日までの準備依頼<span class="sub">　PHERE側</span></span></h2>
+<ul class="check">
+<li>店舗Wi-FiのSSID／パスワードの確認</li>
+<li>お二人のスマホに、アプリを入れられる状態にしておく（Apple ID等）</li>
+<li>店の共用Googleアカウントがなければ、当日作るのでメールアドレス案を考えておく</li>
+<li>ストック画像の中から「お気に入りの10枚」を選んでおいてもらう</li>
+</ul>
+</section>
+
+<section id="g">
+<h2><span class="n">G</span><span>総合メモ<span class="sub">　自由に</span></span></h2>
+<div class="memo"><div class="ml2">全体を通して</div><textarea class="f" data-k="mZ" data-l="総合メモ" placeholder="その場で出た話、次回までの宿題、印象に残った言葉など。長くなっても大丈夫です。"></textarea></div>
+<div class="tw" style="margin-top:20px"><table>
+<tr><th>記入日</th><th>記入者</th></tr>
+<tr><td><input class="f m" data-k="z1" data-l="記入日"></td><td><input class="f m" data-k="z2" data-l="記入者"></td></tr>
+</table></div>
+</section>
+
+<script>
+(function(){
+  var KEY='phere_sheet_07_v1';
+  function fields(){return document.querySelectorAll('[data-k]');}
+  function stamp(msg,ok){var s=document.getElementById('stat');if(!s)return;
+    s.textContent=msg;s.className='st'+(ok?' on':'');}
+  function collect(){var o={};fields().forEach(function(el){
+    if(el.type==='radio'){if(el.checked)o[el.dataset.k]=el.value;}
+    else o[el.dataset.k]=el.value;});return o;}
+  function apply(o){fields().forEach(function(el){
+    var v=o[el.dataset.k];if(v===undefined)return;
+    if(el.type==='radio'){el.checked=(el.value===v);}else{el.value=v;}});}
+  var t=null;
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(collect()));
+    stamp('保存しました（'+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'})+'）',true);
+    setTimeout(function(){stamp('入力すると自動で保存されます',false)},2600);
+  }catch(e){stamp('この画面では自動保存が使えません。書き出しをお使いください',false);}}
+  function load(){try{var s=localStorage.getItem(KEY);if(s){apply(JSON.parse(s));
+    stamp('前回の続きを読み込みました',true);
+    setTimeout(function(){stamp('入力すると自動で保存されます',false)},2600);}
+  }catch(e){}}
+  document.addEventListener('input',function(e){if(!e.target.dataset||!e.target.dataset.k)return;
+    clearTimeout(t);t=setTimeout(save,600);});
+  document.addEventListener('change',function(e){if(!e.target.dataset||!e.target.dataset.k)return;save();});
+
+  window.phExport=function(){
+    var o=collect();o._saved=new Date().toISOString();
+    var b=new Blob([JSON.stringify(o,null,1)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(b);
+    a.download='PHERE_ヒアリング_'+new Date().toISOString().slice(0,10)+'.json';
+    a.click();URL.revokeObjectURL(a.href);stamp('ファイルに書き出しました',true);};
+
+  window.phImport=function(){
+    var i=document.createElement('input');i.type='file';i.accept='.json,application/json';
+    i.onchange=function(){var f=i.files[0];if(!f)return;var r=new FileReader();
+      r.onload=function(){try{apply(JSON.parse(r.result));save();stamp('読み込みました',true);}
+      catch(e){alert('このファイルは読み込めませんでした。');}};r.readAsText(f);};
+    i.click();};
+
+  window.phText=function(){
+    var out=[];document.querySelectorAll('[data-k]').forEach(function(el){
+      if(el.type==='radio'&&!el.checked)return;
+      var v=(el.value||'').trim();if(!v)return;
+      out.push('■ '+(el.dataset.l||el.dataset.k)+'\n'+v);});
+    var s=out.length?out.join('\n\n'):'（まだ入力がありません）';
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(s).then(function(){stamp('入力内容をコピーしました',true);},
+      function(){window.prompt('コピーしてお使いください',s);});
+    }else{window.prompt('コピーしてお使いください',s);}};
+
+  window.phClear=function(){
+    if(!confirm('入力した内容をすべて消します。よろしいですか？'))return;
+    fields().forEach(function(el){if(el.type==='radio')el.checked=false;else el.value='';});
+    try{localStorage.removeItem(KEY);}catch(e){}
+    stamp('消去しました',false);};
+
+  document.addEventListener('DOMContentLoaded',function(){load();
+    setTimeout(function(){stamp('入力すると自動で保存されます',false)},2600);});
+})();
+</script>
+
+<a class="backlink" href="index.html">← 資料一覧にもどる</a>
+<footer><span>美容室PHERE ／ AI導入プロジェクト</span><span>作成：Fable</span></footer>
+</div></body></html>

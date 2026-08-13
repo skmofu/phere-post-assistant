@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Instagram 運用プラン｜30日投稿カレンダー｜PHERE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --ink:#2B2B28; --ink2:#4A473F; --paper:#FBFAF7; --card:#FFFFFF;
+ --sand:#EFECE5; --sand2:#F5F2EC; --line:#E2DED4;
+ --muted:#8A8577; --muted2:#B4B0A4;
+ --brass:#C89F6B; --terra:#B5402F; --sage:#4A5A42; --sageL:#B9C0B8;
+ --r:14px; --shadow:0 2px 14px rgba(154,150,138,.16);
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+ font-family:'Hiragino Kaku Gothic ProN','Zen Kaku Gothic New','Yu Gothic Medium',sans-serif;
+ font-size:15px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 100px}
+
+/* ---- header ---- */
+header.top{padding:48px 0 30px}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;color:var(--brass);
+ border:1px solid var(--brass);border-radius:999px;padding:4px 13px;margin-bottom:18px}
+h1{font-size:clamp(25px,4.6vw,37px);line-height:1.35;letter-spacing:.01em;font-weight:700}
+.lead{margin-top:14px;color:var(--ink2);font-size:15px;max-width:62ch}
+.meta{margin-top:16px;font-size:12px;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:30px 0 0}
+
+/* ---- toc ---- */
+nav.toc{margin:26px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{font-size:12.5px;color:var(--ink2);text-decoration:none;background:var(--sand);
+ border-radius:999px;padding:6px 14px;transition:.15s}
+nav.toc a:hover{background:var(--ink);color:var(--paper)}
+
+/* ---- section ---- */
+section{margin-top:52px;scroll-margin-top:16px}
+h2{font-size:21px;font-weight:700;display:flex;align-items:center;gap:12px;line-height:1.4}
+h2 .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);
+ font-size:14px;display:grid;place-items:center;font-weight:700}
+h2 .sub{font-size:12.5px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+h3{font-size:16px;font-weight:700;margin:26px 0 10px}
+p{margin:12px 0;max-width:74ch}
+.small{font-size:13px;color:var(--muted)}
+strong{font-weight:700}
+a{color:var(--sage)}
+
+/* ---- cards ---- */
+.grid{display:grid;gap:14px;margin-top:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+ padding:20px;box-shadow:var(--shadow)}
+.card.tint{background:var(--sand);box-shadow:none}
+.card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card.dark .ct,.card.dark p{color:var(--muted2)}
+.ch{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ch .dot{flex:none;width:24px;height:24px;border-radius:50%;background:var(--brass);color:var(--ink);
+ font-size:12px;font-weight:700;display:grid;place-items:center}
+.ct{font-size:13.5px;color:var(--ink2);line-height:1.8}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:480px}
+th{background:var(--sand);text-align:left;font-weight:700;padding:11px 14px;
+ border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px;letter-spacing:.03em}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.75}
+tr:last-child td{border-bottom:none}
+td.num,th.num{width:44px;text-align:center;color:var(--muted);white-space:nowrap}
+.fill{display:inline-block;min-width:110px;border-bottom:1px dashed var(--muted2);height:1.3em}
+
+/* ---- callouts ---- */
+.note{margin-top:18px;border-radius:var(--r);padding:16px 18px;font-size:13.5px;line-height:1.8;
+ background:var(--sand2);border:1px solid var(--line)}
+.note.brass{background:#FAF4EA;border-color:#E8D5B8}
+.note.warn{background:#FBF3F0;border-color:#E4CCC4}
+.note.sage{background:#F0F3EF;border-color:#D2DBD0}
+.note .nt{font-weight:700;display:block;margin-bottom:5px;font-size:13px;letter-spacing:.03em}
+.note.brass .nt{color:#9A7440}.note.warn .nt{color:#8F4B3B}.note.sage .nt{color:var(--sage)}
+
+/* ---- flow ---- */
+.flow{margin-top:20px;display:grid;gap:0}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;
+ box-shadow:var(--shadow)}
+.fstep.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fstep.ink .fd{color:var(--muted2)}
+.fstep .fl{font-size:11px;letter-spacing:.12em;color:var(--brass);margin-bottom:5px}
+.fstep .fh{font-weight:700;font-size:16px}
+.fstep .fd{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.75}
+.arrow{justify-self:center;color:var(--brass);font-size:19px;line-height:1;padding:9px 0}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---- chips / steps ---- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.chip{background:var(--sand);border-radius:999px;padding:7px 15px;font-size:13px}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.br{background:var(--brass);color:var(--ink);font-weight:700}
+
+/* ---- phase timeline ---- */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.ph{border-radius:var(--r);padding:16px;background:var(--card);border:1px solid var(--line)}
+.ph .pn{font-size:11px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.ph .pt{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.ph .pd{font-size:12.5px;color:var(--ink2);line-height:1.75}
+.ph.p1{background:var(--sage);color:#fff;border-color:var(--sage)}
+.ph.p1 .pd,.ph.p1 .pn{color:#DCE4DA}
+.ph.p2{background:var(--sageL);border-color:var(--sageL)}
+.ph.p3{background:var(--sand);border-color:var(--sand)}
+.ph.p4{background:var(--sand2)}
+
+/* ---- checklist ---- */
+ul.check{list-style:none;margin-top:14px;display:grid;gap:9px}
+ul.check li{background:var(--card);border:1px solid var(--line);border-radius:11px;
+ padding:13px 16px 13px 44px;position:relative;font-size:14px;line-height:1.7}
+ul.check li:before{content:"";position:absolute;left:16px;top:16px;width:15px;height:15px;
+ border:1.6px solid var(--muted2);border-radius:4px}
+ul.bul{margin:12px 0 0 20px;display:grid;gap:7px;font-size:14px}
+ul.bul li{line-height:1.8}
+ol.steps{margin:14px 0 0 0;list-style:none;counter-reset:s;display:grid;gap:11px}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;font-size:14px;line-height:1.8}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:1px;width:27px;height:27px;
+ border-radius:50%;background:var(--sand);color:var(--ink);font-size:13px;font-weight:700;
+ display:grid;place-items:center}
+
+/* ---- misc ---- */
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.kpi .k{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:18px 20px}
+.kpi .kv{font-size:27px;font-weight:700;line-height:1.25}
+.kpi .kl{font-size:12px;color:var(--muted2);margin-top:5px}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:5px;background:var(--sand);
+ color:var(--ink2);margin-right:5px;white-space:nowrap}
+.tag.br{background:var(--brass);color:var(--ink);font-weight:700}
+.tag.sg{background:var(--sage);color:#fff}
+.tag.tr{background:var(--terra);color:#fff}
+footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
+ font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.backlink{display:inline-block;margin-top:24px;font-size:13px;color:var(--muted);text-decoration:none}
+.backlink:hover{color:var(--ink)}
+
+@media(max-width:760px){
+ body{font-size:14.5px}
+ .wrap{padding:0 15px 70px}
+ header.top{padding:30px 0 20px}
+ .g2,.g3,.g4,.phases,.kpi,.branch{grid-template-columns:1fr}
+ section{margin-top:38px}
+ h2{font-size:18.5px}
+}
+@media print{
+ body{background:#fff} nav.toc{display:none} .card,.tw{box-shadow:none}
+ section{break-inside:avoid} .backlink{display:none}
+}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+<span class="eyebrow">03 ／ Instagram 運用プラン</span>
+<h1>撮るのはお二人。<br>あとは、型が回します。</h1>
+<p class="lead">対象：@phere_hair（学芸大学）。美容師の仕事は「撮る」だけ。文章づくり・整形・予約投稿はAIと仕組みが引き受けます。</p>
+<p class="meta">第3回教材　最終更新：2026-08-13</p>
+<div class="rule"></div>
+</header>
+
+<style>
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:18px}
+.cal .dow{font-size:11px;color:var(--muted);text-align:center;padding-bottom:2px;letter-spacing:.06em}
+.cal .cell{background:var(--card);border:1px solid var(--line);border-radius:10px;
+ min-height:78px;padding:8px 8px 7px;font-size:11px;line-height:1.5;position:relative;overflow:hidden}
+.cal .cell.off{background:var(--sand2);border-style:dashed;color:var(--muted)}
+.cal .cell.pad{background:transparent;border:none;min-height:0}
+.cal .d{font-size:12px;font-weight:700;color:var(--ink2)}
+.cal .bar{height:4px;border-radius:3px;margin:5px 0 5px}
+.cal .tl{color:var(--ink);font-weight:700;font-size:10.5px;line-height:1.45}
+.cal .fm{color:var(--muted);font-size:10px;margin-top:3px}
+.dist{display:flex;height:34px;border-radius:8px;overflow:hidden;margin-top:16px;gap:2px}
+.dist span{display:grid;place-items:center;color:#fff;font-size:12px;font-weight:700}
+.leg{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:12.5px;color:var(--ink2)}
+.leg i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+pre.cap{background:var(--ink);color:#F2EFE9;border-radius:12px;padding:18px 20px;font-size:12.5px;
+ line-height:2;white-space:pre-wrap;overflow-x:auto;margin-top:10px;
+ font-family:'Hiragino Kaku Gothic ProN',monospace}
+pre.tagset{background:var(--sand);color:var(--ink);border-radius:10px;padding:13px 16px;font-size:12.5px;
+ white-space:pre-wrap;margin-top:8px;line-height:1.9}
+@media(max-width:760px){.cal{grid-template-columns:repeat(4,1fr)}.cal .dow{display:none}
+ .cal .cell{min-height:66px}.cal .cell.pad{display:none}}
+</style>
+
+<nav class="toc">
+<a href="#hoshin">運用方針</a><a href="#namae">名前の決めごと</a><a href="#hashira">4本柱</a>
+<a href="#cal">30日カレンダー</a><a href="#cap">実弾キャプション</a><a href="#tag">タグ3セット</a>
+<a href="#satsuei">撮影チェック</a><a href="#flow">投稿フロー</a>
+</nav>
+
+<div class="kpi">
+ <div class="k"><div class="kv">週4回</div><div class="kl">フィード2＋リール1＋固定曜日企画1</div></div>
+ <div class="k"><div class="kv">週1本</div><div class="kl">10〜20秒のリール。仕上がりターンで十分</div></div>
+ <div class="k"><div class="kv">毎営業日</div><div class="kl">ストーリーズ1本。加工不要の「生存報告」</div></div>
+</div>
+
+<section id="hoshin">
+<h2><span class="n">1</span><span>運用方針<span class="sub">　3行で</span></span></h2>
+<ol class="steps">
+<li>投稿頻度は<strong>週4回</strong>。大規模な調査で、週3〜5回がフォロワーの増え方に対していちばん効率がよいとされる水準に合わせています。</li>
+<li>インスタは動画の視聴時間を重視するので、<strong>週1本は必ずリール</strong>。10〜20秒、仕上がりをゆっくり1回転させるだけで成立します。</li>
+<li>ストーリーズは毎営業日1本。ハイライトに「ご予約方法」「メニュー」「アクセス」を常設します。</li>
+</ol>
+</section>
+
+<section id="namae">
+<h2><span class="n">2</span><span>名前まわりの決めごと<span class="sub">　最重要</span></span></h2>
+<p>同じ「PHERE」という名前のアパレルブランド（フォロワー約1万）があります。お店を探している方が迷わないように、次の3つを必ず揃えます。</p>
+<div class="grid g3">
+<div class="card tint"><div class="ch"><span class="dot">1</span>プロフィール名</div>
+ <div class="ct"><strong>PHERE｜学芸大学 美容室</strong> に統一</div></div>
+<div class="card tint"><div class="ch"><span class="dot">2</span>必須3タグ</div>
+ <div class="ct">#学芸大学美容室　#学芸大学　#phere学芸大学</div></div>
+<div class="card tint"><div class="ch"><span class="dot">3</span>1行目</div>
+ <div class="ct">「学芸大学駅徒歩1分」を高い頻度で入れる</div></div>
+</div>
+</section>
+
+<section id="hashira">
+<h2><span class="n">3</span><span>コンテンツ4本柱と配分</span></h2>
+<div class="dist"><span style="background:#00795C;flex:40">40%</span><span style="background:#B37400;flex:20">20%</span><span style="background:#AB2B1C;flex:20">20%</span><span style="background:#2C74AE;flex:20">20%</span></div><div class="leg"><span><i style="background:#00795C"></i>A　スタイル</span><span><i style="background:#B37400"></i>B　学大ローカル</span><span><i style="background:#AB2B1C"></i>C　ケア知識</span><span><i style="background:#2C74AE"></i>D　人と店</span></div>
+<div class="tw"><table>
+<tr><th>柱</th><th class="num">配分</th><th>内容</th><th>狙い</th></tr>
+<tr><td><span class="tag" style="background:#00795C;color:#fff">A</span> <strong>スタイル</strong></td><td class="num">40%</td>
+ <td>Before / After・仕上がりリール</td><td>指名予約の直接の動機になる</td></tr>
+<tr><td><span class="tag" style="background:#B37400;color:#fff">B</span> <strong>学大ローカル</strong></td><td class="num">20%</td>
+ <td>商店街・街ネタ・近隣店の紹介</td><td>「行きつけ文化」の街との接続。保存・シェアが伸びる</td></tr>
+<tr><td><span class="tag" style="background:#AB2B1C;color:#fff">C</span> <strong>ケア知識×ピトレティカ</strong></td><td class="num">20%</td>
+ <td>髪の豆知識・ホームケア</td><td>店販の種まき、専門性の提示</td></tr>
+<tr><td><span class="tag" style="background:#2C74AE;color:#fff">D</span> <strong>人と店</strong></td><td class="num">20%</td>
+ <td>スタイリスト紹介・店内・働く風景</td><td>新規の方の不安解消＋採用にも効く</td></tr>
+</table></div>
+<div class="note"><span class="nt">トーン</span>絵文字はほぼ使わない・短文・上質。「ワンランク上」のブランドに合わせます。</div>
+</section>
+
+<section id="cal">
+<h2><span class="n">4</span><span>30日カレンダー<span class="sub">　火曜定休／投稿は月・水・金・日</span></span></h2>
+<div class="cal"><div class="dow">月</div><div class="dow">火</div><div class="dow">水</div><div class="dow">木</div><div class="dow">金</div><div class="dow">土</div><div class="dow">日</div><div class="cell"><span class="d">1</span><div class="bar" style="background:#2C74AE"></div><div class="tl">ご挨拶＋店内写真</div><div class="fm">フィード</div></div><div class="cell off"><span class="d">2</span><br>定休</div><div class="cell"><span class="d">3</span><div class="bar" style="background:#00795C"></div><div class="tl">レイヤーカット Before/After</div><div class="fm">フィード2枚</div></div><div class="cell off"><span class="d">4</span></div><div class="cell"><span class="d">5</span><div class="bar" style="background:#00795C"></div><div class="tl">メンズニュアンスパーマ 仕上がりターン</div><div class="fm">リール15秒</div></div><div class="cell off"><span class="d">6</span></div><div class="cell"><span class="d">7</span><div class="bar" style="background:#B37400"></div><div class="tl">日曜の商店街と当店への道順</div><div class="fm">フィード3枚</div></div><div class="cell"><span class="d">8</span><div class="bar" style="background:#AB2B1C"></div><div class="tl">シャンプー前の予洗い、何秒してますか</div><div class="fm">フィード</div></div><div class="cell off"><span class="d">9</span><br>定休</div><div class="cell"><span class="d">10</span><div class="bar" style="background:#00795C"></div><div class="tl">透明感カラー Before/After</div><div class="fm">フィード2枚</div></div><div class="cell off"><span class="d">11</span></div><div class="cell"><span class="d">12</span><div class="bar" style="background:#2C74AE"></div><div class="tl">河野さん紹介（得意・こだわり・一問一答）</div><div class="fm">フィード</div></div><div class="cell off"><span class="d">13</span></div><div class="cell"><span class="d">14</span><div class="bar" style="background:#00795C"></div><div class="tl">ヘッドスパの手元 10秒</div><div class="fm">リール</div></div><div class="cell"><span class="d">15</span><div class="bar" style="background:#B37400"></div><div class="tl">施術後に寄りたい学大カフェ（1店）</div><div class="fm">フィード</div></div><div class="cell off"><span class="d">16</span><br>定休</div><div class="cell"><span class="d">17</span><div class="bar" style="background:#00795C"></div><div class="tl">ボブの再現性カット</div><div class="fm">フィード2枚</div></div><div class="cell off"><span class="d">18</span></div><div class="cell"><span class="d">19</span><div class="bar" style="background:#AB2B1C"></div><div class="tl">ピトレティカ紹介①「髪質で選ぶシャンプー」</div><div class="fm">フィード</div></div><div class="cell off"><span class="d">20</span></div><div class="cell"><span class="d">21</span><div class="bar" style="background:#00795C"></div><div class="tl">メンズカット Before/After</div><div class="fm">リール</div></div><div class="cell"><span class="d">22</span><div class="bar" style="background:#2C74AE"></div><div class="tl">ナカガワさん紹介</div><div class="fm">フィード</div></div><div class="cell off"><span class="d">23</span><br>定休</div><div class="cell"><span class="d">24</span><div class="bar" style="background:#00795C"></div><div class="tl">白髪ぼかし／大人カラー</div><div class="fm">フィード2枚</div></div><div class="cell off"><span class="d">25</span></div><div class="cell"><span class="d">26</span><div class="bar" style="background:#B37400"></div><div class="tl">学芸大学で美容室を探している方へ</div><div class="fm">フィード</div></div><div class="cell off"><span class="d">27</span></div><div class="cell"><span class="d">28</span><div class="bar" style="background:#00795C"></div><div class="tl">パーマ仕上がりターン</div><div class="fm">リール</div></div><div class="cell"><span class="d">29</span><div class="bar" style="background:#AB2B1C"></div><div class="tl">夜のヘアケア習慣</div><div class="fm">フィード</div></div><div class="cell off"><span class="d">30</span><br>定休</div></div>
+<div class="leg"><span><i style="background:#00795C"></i>A　スタイル</span><span><i style="background:#B37400"></i>B　学大ローカル</span><span><i style="background:#AB2B1C"></i>C　ケア知識</span><span><i style="background:#2C74AE"></i>D　人と店</span>
+<span><i style="background:#E2DED4"></i>定休・投稿なし</span></div>
+<div class="note"><span class="nt">2巡目からがラクになります</span>
+この16本を「型」として持っておき、季節ネタで中身を差し替えて回します。型にしておくことが、続けられるかどうかの分かれ目です。</div>
+</section>
+
+<section id="cap">
+<h2><span class="n">5</span><span>実弾キャプション5本<span class="sub">　そのまま使えます</span></span></h2>
+
+<h3>① スタイル（レイヤーカット）</h3>
+<pre class="cap">乾かすだけで、形になるレイヤー。
+
+朝のアイロン時間を減らしたい、というご相談から。
+骨格と生えぐせに合わせて量感を調整し、
+自然に内に入る毛先をつくりました。
+
+カット ¥6,600／完全予約制
+学芸大学駅 徒歩1分
+
+#学芸大学美容室 #学芸大学 #phere学芸大学
+#レイヤーカット #似合わせカット #目黒区美容室</pre>
+
+<h3>② メンズパーマ</h3>
+<pre class="cap">セットは、ワックスを揉み込んで30秒。
+
+直毛で動きが出ない、朝に時間をかけたくない。
+そんな方にご提案しているニュアンスパーマです。
+ダメージレスな薬剤選定で、柔らかい質感に。
+
+担当：河野／学芸大学駅 徒歩1分
+
+#学芸大学美容室 #phere学芸大学 #メンズパーマ
+#ニュアンスパーマ #メンズカット #学芸大学</pre>
+
+<h3>③ 学大ローカル</h3>
+<pre class="cap">日曜の学芸大学は、商店街を歩くだけで楽しい街。
+
+当店は駅の改札を出て徒歩1分、
+アーク石田ビルの2階にあります。
+お買い物やお散歩の途中に、髪を整える時間を。
+
+本日も10:00から営業しています。
+
+#学芸大学 #学芸大学商店街 #学芸大学美容室
+#phere学芸大学 #東横線 #目黒区</pre>
+
+<h3>④ ケア知識×ピトレティカ</h3>
+<pre class="cap">シャンプーは「泡で洗う」が正解です。
+
+濡らしが足りないと泡立たず、
+摩擦がそのままダメージになります。
+目安は、お湯だけで60秒の予洗いから。
+
+PHEREでは髪質に合わせて
+サロン専売のピトレティカをご提案しています。
+ご自宅でのケアも、お気軽にご相談ください。
+
+#学芸大学美容室 #phere学芸大学 #ピトレティカ
+#ヘアケア #シャンプー #学芸大学</pre>
+
+<h3>⑤ スタッフ紹介</h3>
+<pre class="cap">PHEREのふたり、その一。
+
+カラーとヘッドスパを担当しているナカガワです。
+得意なのは、透明感のあるカラーと、
+眠ってしまうお客さまが続出のヘッドスパ。
+
+「悩みも、なりたいも、まずは聞かせてください」
+
+完全予約制／学芸大学駅 徒歩1分
+
+#学芸大学美容室 #phere学芸大学 #学芸大学
+#透明感カラー #ヘッドスパ #美容師</pre>
+</section>
+
+<section id="tag">
+<h2><span class="n">6</span><span>ハッシュタグ3セット<span class="sub">　コピペ用</span></span></h2>
+<h3>基本</h3>
+<pre class="tagset">#学芸大学美容室 #学大美容室 #学芸大学 #phere学芸大学 #目黒区美容室</pre>
+<h3>レディース</h3>
+<pre class="tagset">基本 ＋ #透明感カラー #レイヤーカット #髪質改善 #ヘッドスパ</pre>
+<h3>メンズ</h3>
+<pre class="tagset">基本 ＋ #メンズカット #学大メンズカット #メンズパーマ #メンズショート</pre>
+<div class="note"><span class="nt">投稿時の並べ方</span>
+実際のアカウントの流儀に合わせ、ハッシュタグは<strong>1行ずつ縦に積みます</strong>。「#学大美容室」「#学大メンズカット」は今も使っている略称タグなので、続けて入れてください。</div>
+</section>
+
+<section id="satsuei">
+<h2><span class="n">7</span><span>撮影チェックリスト<span class="sub">　施術後5分でこれだけ</span></span></h2>
+<ul class="check">
+<li><strong>After：正面・斜め45度・後ろ の3枚</strong>（窓際の自然光、縦位置）</li>
+<li><strong>動画：その場でゆっくり1回転（10秒）</strong>——これがリールの素材になります</li>
+<li>可能なら Before 1枚（施術前に「SNS掲載可」を口頭で確認 → カルテにメモ）</li>
+<li>撮れたら共有アルバム「PHERE_SNS」に放り込む。<strong>ここで美容師の仕事は終わりです</strong></li>
+</ul>
+</section>
+
+<section id="flow">
+<h2><span class="n">8</span><span>投稿フロー<span class="sub">　仕組み側</span></span></h2>
+<ol class="steps">
+<li>共有アルバムの写真を確認</li>
+<li>AIに写真の内容を1行伝える（例：「30代女性、レイヤーカット、朝ラクになりたいという要望」）</li>
+<li>AIがキャプション＋タグを生成 → 気になる箇所だけ直す</li>
+<li>Meta Business Suite（無料）で日時を指定して予約投稿</li>
+</ol>
+
+<h3>店長AI プロンプト雛形</h3>
+<pre class="cap">あなたは東京・学芸大学の美容室「PHERE」のSNS担当です。
+PHEREの投稿様式：写真の被写体をそのまま主役に書く
+（花や店内の写真を施術・カラーに無理に結びつけない）。
+本文は最小限（一言〜2文まで）。文末に必ず
+定型署名「PHERE／目黒区鷹番3-1-2アーク石田ビル2F／[学芸大学駅 徒歩1分]」と
+ハッシュタグ（#学芸大学美容室 #学大美容室 ほか関連タグを1行ずつ縦積み）。
+トーン：静か・余白・絵文字は✂︎程度まで。
+禁止：誇大表現（絶対・No.1）、医療的効能の断定、他店比較。
+以下の施術メモから「無言」「ひとこと」「すこし語る」の3温度で下書きを作成。
+施術メモ：［ここに1行］</pre>
+<div class="note"><span class="nt">この雛形は17番の投稿アシスタントに組み込み済みです</span>
+当日デモで3案が出るのは、この考え方がそのまま入っているからです。</div>
+</section>
+
+<div class="note" style="margin-top:36px"><span class="nt">この案について</span>
+本カレンダーはデモ兼・初月の実運用案です。第0回ヒアリングのあと、実際の得意メニューや客層の比率に合わせて配分を調整します。</div>
+
+<a class="backlink" href="index.html">← 資料一覧にもどる</a>
+<footer><span>美容室PHERE ／ AI導入プロジェクト</span><span>作成：Fable</span></footer>
+</div></body></html>

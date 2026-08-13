@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Gemini APIキー 無料発行手順｜PHERE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --ink:#2B2B28; --ink2:#4A473F; --paper:#FBFAF7; --card:#FFFFFF;
+ --sand:#EFECE5; --sand2:#F5F2EC; --line:#E2DED4;
+ --muted:#8A8577; --muted2:#B4B0A4;
+ --brass:#C89F6B; --terra:#B5402F; --sage:#4A5A42; --sageL:#B9C0B8;
+ --r:14px; --shadow:0 2px 14px rgba(154,150,138,.16);
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+ font-family:'Hiragino Kaku Gothic ProN','Zen Kaku Gothic New','Yu Gothic Medium',sans-serif;
+ font-size:15px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 100px}
+
+/* ---- header ---- */
+header.top{padding:48px 0 30px}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;color:var(--brass);
+ border:1px solid var(--brass);border-radius:999px;padding:4px 13px;margin-bottom:18px}
+h1{font-size:clamp(25px,4.6vw,37px);line-height:1.35;letter-spacing:.01em;font-weight:700}
+.lead{margin-top:14px;color:var(--ink2);font-size:15px;max-width:62ch}
+.meta{margin-top:16px;font-size:12px;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:30px 0 0}
+
+/* ---- toc ---- */
+nav.toc{margin:26px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{font-size:12.5px;color:var(--ink2);text-decoration:none;background:var(--sand);
+ border-radius:999px;padding:6px 14px;transition:.15s}
+nav.toc a:hover{background:var(--ink);color:var(--paper)}
+
+/* ---- section ---- */
+section{margin-top:52px;scroll-margin-top:16px}
+h2{font-size:21px;font-weight:700;display:flex;align-items:center;gap:12px;line-height:1.4}
+h2 .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);
+ font-size:14px;display:grid;place-items:center;font-weight:700}
+h2 .sub{font-size:12.5px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+h3{font-size:16px;font-weight:700;margin:26px 0 10px}
+p{margin:12px 0;max-width:74ch}
+.small{font-size:13px;color:var(--muted)}
+strong{font-weight:700}
+a{color:var(--sage)}
+
+/* ---- cards ---- */
+.grid{display:grid;gap:14px;margin-top:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+ padding:20px;box-shadow:var(--shadow)}
+.card.tint{background:var(--sand);box-shadow:none}
+.card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card.dark .ct,.card.dark p{color:var(--muted2)}
+.ch{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ch .dot{flex:none;width:24px;height:24px;border-radius:50%;background:var(--brass);color:var(--ink);
+ font-size:12px;font-weight:700;display:grid;place-items:center}
+.ct{font-size:13.5px;color:var(--ink2);line-height:1.8}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:480px}
+th{background:var(--sand);text-align:left;font-weight:700;padding:11px 14px;
+ border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px;letter-spacing:.03em}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.75}
+tr:last-child td{border-bottom:none}
+td.num,th.num{width:44px;text-align:center;color:var(--muted);white-space:nowrap}
+.fill{display:inline-block;min-width:110px;border-bottom:1px dashed var(--muted2);height:1.3em}
+
+/* ---- callouts ---- */
+.note{margin-top:18px;border-radius:var(--r);padding:16px 18px;font-size:13.5px;line-height:1.8;
+ background:var(--sand2);border:1px solid var(--line)}
+.note.brass{background:#FAF4EA;border-color:#E8D5B8}
+.note.warn{background:#FBF3F0;border-color:#E4CCC4}
+.note.sage{background:#F0F3EF;border-color:#D2DBD0}
+.note .nt{font-weight:700;display:block;margin-bottom:5px;font-size:13px;letter-spacing:.03em}
+.note.brass .nt{color:#9A7440}.note.warn .nt{color:#8F4B3B}.note.sage .nt{color:var(--sage)}
+
+/* ---- flow ---- */
+.flow{margin-top:20px;display:grid;gap:0}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;
+ box-shadow:var(--shadow)}
+.fstep.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fstep.ink .fd{color:var(--muted2)}
+.fstep .fl{font-size:11px;letter-spacing:.12em;color:var(--brass);margin-bottom:5px}
+.fstep .fh{font-weight:700;font-size:16px}
+.fstep .fd{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.75}
+.arrow{justify-self:center;color:var(--brass);font-size:19px;line-height:1;padding:9px 0}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---- chips / steps ---- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.chip{background:var(--sand);border-radius:999px;padding:7px 15px;font-size:13px}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.br{background:var(--brass);color:var(--ink);font-weight:700}
+
+/* ---- phase timeline ---- */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.ph{border-radius:var(--r);padding:16px;background:var(--card);border:1px solid var(--line)}
+.ph .pn{font-size:11px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.ph .pt{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.ph .pd{font-size:12.5px;color:var(--ink2);line-height:1.75}
+.ph.p1{background:var(--sage);color:#fff;border-color:var(--sage)}
+.ph.p1 .pd,.ph.p1 .pn{color:#DCE4DA}
+.ph.p2{background:var(--sageL);border-color:var(--sageL)}
+.ph.p3{background:var(--sand);border-color:var(--sand)}
+.ph.p4{background:var(--sand2)}
+
+/* ---- checklist ---- */
+ul.check{list-style:none;margin-top:14px;display:grid;gap:9px}
+ul.check li{background:var(--card);border:1px solid var(--line);border-radius:11px;
+ padding:13px 16px 13px 44px;position:relative;font-size:14px;line-height:1.7}
+ul.check li:before{content:"";position:absolute;left:16px;top:16px;width:15px;height:15px;
+ border:1.6px solid var(--muted2);border-radius:4px}
+ul.bul{margin:12px 0 0 20px;display:grid;gap:7px;font-size:14px}
+ul.bul li{line-height:1.8}
+ol.steps{margin:14px 0 0 0;list-style:none;counter-reset:s;display:grid;gap:11px}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;font-size:14px;line-height:1.8}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:1px;width:27px;height:27px;
+ border-radius:50%;background:var(--sand);color:var(--ink);font-size:13px;font-weight:700;
+ display:grid;place-items:center}
+
+/* ---- misc ---- */
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.kpi .k{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:18px 20px}
+.kpi .kv{font-size:27px;font-weight:700;line-height:1.25}
+.kpi .kl{font-size:12px;color:var(--muted2);margin-top:5px}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:5px;background:var(--sand);
+ color:var(--ink2);margin-right:5px;white-space:nowrap}
+.tag.br{background:var(--brass);color:var(--ink);font-weight:700}
+.tag.sg{background:var(--sage);color:#fff}
+.tag.tr{background:var(--terra);color:#fff}
+footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
+ font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.backlink{display:inline-block;margin-top:24px;font-size:13px;color:var(--muted);text-decoration:none}
+.backlink:hover{color:var(--ink)}
+
+@media(max-width:760px){
+ body{font-size:14.5px}
+ .wrap{padding:0 15px 70px}
+ header.top{padding:30px 0 20px}
+ .g2,.g3,.g4,.phases,.kpi,.branch{grid-template-columns:1fr}
+ section{margin-top:38px}
+ h2{font-size:18.5px}
+}
+@media print{
+ body{background:#fff} nav.toc{display:none} .card,.tw{box-shadow:none}
+ section{break-inside:avoid} .backlink{display:none}
+}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+<span class="eyebrow">18 ／ APIキー発行手順（17番用）</span>
+<h1>5分で発行。<br>お金の経路は作らない。</h1>
+<p class="lead">17番の投稿アシスタントを動かすためのキーを、PHEREのGoogleアカウントで発行します。請求先は紐づけないので、課金の経路そのものが存在しません。</p>
+<p class="meta">勉強会前にマスターが実施　最終更新：2026-08-13</p>
+<div class="rule"></div>
+</header>
+
+<style>
+.mchart{margin-top:16px}
+.mrow{display:grid;grid-template-columns:150px 1fr 74px;gap:12px;align-items:center;
+ padding:8px 0;font-size:13px}
+.mbar{height:20px;border-radius:4px;background:#00795C;position:relative}
+.mrow.slow .mbar{background:#AB2B1C}
+.mrow .ml{font-weight:700;color:var(--ink2);font-family:'Hiragino Kaku Gothic ProN',monospace;font-size:12.5px}
+.mrow .mv{text-align:right;color:var(--ink2);font-variant-numeric:tabular-nums}
+.mrow.pick .ml:after{content:"採用";background:var(--brass);color:var(--ink);font-size:10px;
+ border-radius:4px;padding:2px 7px;margin-left:8px;font-weight:700}
+.axis{font-size:11px;color:var(--muted);margin-top:4px;display:flex;justify-content:space-between;
+ padding-left:162px;padding-right:86px}
+pre.cmd{background:var(--ink);color:#F2EFE9;border-radius:10px;padding:14px 17px;font-size:12.5px;
+ white-space:pre-wrap;margin-top:10px;font-family:ui-monospace,monospace;line-height:1.8}
+.no{background:#FBF3F0;border:1px solid #E4CCC4;border-radius:12px;padding:16px 18px;margin-top:14px}
+.no .nh{font-weight:700;color:#8F4B3B;font-size:13.5px;margin-bottom:7px}
+.no ul{margin-left:19px;font-size:13.5px;line-height:1.9}
+@media(max-width:760px){.mrow{grid-template-columns:110px 1fr 60px;font-size:12px}.axis{display:none}}
+</style>
+
+<nav class="toc">
+<a href="#hoshin">方針</a><a href="#tejun">発行手順</a><a href="#model">モデルの選び方</a>
+<a href="#rule">運用ルール</a><a href="#hikaku">なぜGeminiか</a>
+</nav>
+
+<section id="hoshin">
+<h2><span class="n">1</span><span>方針<span class="sub">　お金がかかる経路を、そもそも作らない</span></span></h2>
+<p><strong>PHEREのGoogleアカウントで発行</strong>し、資産をお店に帰属させます。そして<strong>請求先アカウントは絶対にリンクしません</strong>。カード未登録のままなら課金の経路が構造的に存在しないので、キーが万一漏れても金銭的な被害はありません（最悪でも無料枠を使い切るだけ）。</p>
+<div class="kpi">
+ <div class="k"><div class="kv">カード不要</div><div class="kl">請求先を紐づけないまま運用する</div></div>
+ <div class="k"><div class="kv">約5分</div><div class="kl">発行から動作確認まで</div></div>
+ <div class="k"><div class="kv">被害ゼロ</div><div class="kl">漏れても課金経路がないので金銭被害は発生しない</div></div>
+</div>
+</section>
+
+<section id="tejun">
+<h2><span class="n">2</span><span>発行手順</span></h2>
+<ol class="steps">
+<li>PHEREのGoogleアカウントでログインした状態で <strong>aistudio.google.com</strong> を開く</li>
+<li>左メニューまたは右上の <strong>「Get API key（APIキーを取得）」</strong></li>
+<li>「APIキーを作成」→ 新規プロジェクトのまま作成（名称例：<code>phere-post-assistant</code>）</li>
+<li>表示されたキーをコピー（形式は <code>AIza…</code> または新形式 <code>AQ.…</code>）</li>
+<li>17番HTMLへの埋め込みは設定スクリプトが自動で行う。手動なら上部の <code>var GEMINI_KEY='';</code> に貼る
+ <pre class="cmd">zsh ~/Desktop/claude/phere/set_gemini_key.sh</pre></li>
+<li>動作確認：店の花か商品の写真で1回生成。<strong>3秒前後で3案が返れば完了</strong></li>
+<li><strong>配布はURL方式</strong>：公開版 skmofu.github.io/phere-post-assistant/ にキーは置かず、リンク末尾の <code>#k=キー</code> で受け渡す（#以降はサーバーに送信されません）。完成リンク＝Mac の <code>link.txt</code>。<strong>当日その場でQR（<code>qr_17.html</code>）を画面表示して、河野さん・中川さんの2人限定でお渡しします。</strong>キーを再発行したら link.txt と qr_17.html を作り直す</li>
+</ol>
+
+<div class="no"><div class="nh">やらないこと</div>
+<ul>
+<li>課金アカウント／請求先のリンク</li>
+<li>有料プランへのアップグレード</li>
+</ul>
+<p class="small" style="margin-top:8px">この画面が出ても、常にスキップします。</p></div>
+</section>
+
+<section id="model">
+<h2><span class="n">3</span><span>モデルの選び方<span class="sub">　8/13の実測にもとづく現行設定</span></span></h2>
+<p>8月13日にお二人のキーで実測したところ、これまで使っていた <code>gemini-3.5-flash</code> が混雑していて、応答に9〜28秒かかり、混雑時には接続に失敗していました。そこで17番を<strong>3段構え</strong>に変更しています。</p>
+
+<div class="mchart">
+<div class="mrow pick"><span class="ml">gemini-3.6-flash</span><div class="mbar" style="width:10%"></div><span class="mv">2.6–3.0秒</span></div>
+<div class="mrow"><span class="ml">gemini-flash-latest</span><div class="mbar" style="width:10%"></div><span class="mv">2.5–2.9秒</span></div>
+<div class="mrow"><span class="ml">gemini-3.1-flash-lite</span><div class="mbar" style="width:13%"></div><span class="mv">1.0–4.0秒</span></div>
+<div class="mrow slow"><span class="ml">gemini-3.5-flash</span><div class="mbar" style="width:93%"></div><span class="mv">9–28秒</span></div>
+</div>
+<div class="axis"><span>0秒</span><span>15秒</span><span>30秒</span></div>
+<p class="small">写真1枚＋短い指示で各3回×2セット、2026年8月13日 PHEREアカウント実測。<code>gemini-2.5-flash</code> は新規ユーザーへの提供が終了しています。</p>
+
+<div class="note sage"><span class="nt">17番の現行動作</span>
+<code>gemini-3.6-flash</code> → <code>gemini-flash-latest</code> → <code>gemini-3.5-flash</code> の順に試し、混雑（429／500／503）なら0.9秒待って1回だけやり直します。3つとも届かなかったときだけ、用意してある下書きに切り替わり、画面には落ち着いた日本語の案内が出ます。</div>
+<div class="note"><span class="nt">モデル名を変えたくなったら</span>
+17番の <code>MODELS</code> 配列を書き換えます。どのモデルも無料枠の範囲で、カード未登録である限り課金は発生しません。</div>
+</section>
+
+<section id="rule">
+<h2><span class="n">4</span><span>運用ルール</span></h2>
+<div class="grid g2">
+<div class="card"><div class="ch"><span class="dot">1</span>お客様が写る写真は送らない</div>
+ <div class="ct">無料枠の入出力はサービス改善に利用され得るためです。花・お茶・商品・後ろ姿はOK。</div></div>
+<div class="card"><div class="ch"><span class="dot">2</span>キーの保管場所</div>
+ <div class="ct"><code>PHERE_AI/90_運用ログ/</code> 内のメモなど、ドライブ内限定。チャットやメールの平文で共有しない。</div></div>
+<div class="card"><div class="ch"><span class="dot">3</span>漏れた・調子が悪いとき</div>
+ <div class="ct">AI Studio（またはGCPの「APIとサービス→認証情報」）から無効化 → 再発行 → 貼り替えで完結します。</div></div>
+<div class="card"><div class="ch"><span class="dot">4</span>無料枠の上限</div>
+ <div class="ct">数値はモデルと時期で変わるので固定値を信じず、<strong>AI Studioのレート制限画面が正</strong>。サロン運用（週数件〜月数十件）は余裕圏です。</div></div>
+</div>
+</section>
+
+<section id="hikaku">
+<h2><span class="n">5</span><span>なぜGeminiか<span class="sub">　比較メモ</span></span></h2>
+<div class="tw"><table>
+<tr><th>候補</th><th>無料API</th><th>画像入力</th><th>カード</th><th>判定</th></tr>
+<tr><td><strong>Google Gemini（AI Studio）</strong></td><td>○（現役）</td><td>○</td><td><strong>不要</strong></td>
+ <td><span class="tag sg">◎ 採用</span></td></tr>
+<tr><td>OpenAI（GPT）</td><td>×（無料APIなし・従量課金のみ）</td><td>—</td><td>必要</td>
+ <td><span class="tag tr">× 課金ルールに抵触</span></td></tr>
+<tr><td>Groq／OpenRouter 等の無料枠</td><td>△（変動が大きい）</td><td>△</td><td>不要</td>
+ <td><span class="tag">予備（日本語品質・当日の安定性で次点）</span></td></tr>
+<tr><td>ローカルLLM（Mac・Ollama）</td><td>○</td><td>○</td><td>不要</td>
+ <td><span class="tag">フェーズCの自動パイプ側で有力</span></td></tr>
+</table></div>
+<div class="note"><span class="nt">費用ゼロ方針は将来も貫けます</span>
+フェーズC（Mac側の自動投稿パイプ）も、同じGeminiキーかローカルモデルで賄えます。</div>
+</section>
+
+<a class="backlink" href="index.html">← 資料一覧にもどる</a>
+<footer><span>美容室PHERE ／ AI導入プロジェクト</span><span>作成：Fable</span></footer>
+</div></body></html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>PHERE AI勉強会 資料一覧</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --ink:#2B2B28; --ink2:#4A473F; --paper:#FBFAF7; --card:#FFFFFF;
+ --sand:#EFECE5; --sand2:#F5F2EC; --line:#E2DED4;
+ --muted:#8A8577; --muted2:#B4B0A4;
+ --brass:#C89F6B; --terra:#B5402F; --sage:#4A5A42; --sageL:#B9C0B8;
+ --r:14px; --shadow:0 2px 14px rgba(154,150,138,.16);
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+ font-family:'Hiragino Kaku Gothic ProN','Zen Kaku Gothic New','Yu Gothic Medium',sans-serif;
+ font-size:15px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 100px}
+
+/* ---- header ---- */
+header.top{padding:48px 0 30px}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;color:var(--brass);
+ border:1px solid var(--brass);border-radius:999px;padding:4px 13px;margin-bottom:18px}
+h1{font-size:clamp(25px,4.6vw,37px);line-height:1.35;letter-spacing:.01em;font-weight:700}
+.lead{margin-top:14px;color:var(--ink2);font-size:15px;max-width:62ch}
+.meta{margin-top:16px;font-size:12px;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:30px 0 0}
+
+/* ---- toc ---- */
+nav.toc{margin:26px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{font-size:12.5px;color:var(--ink2);text-decoration:none;background:var(--sand);
+ border-radius:999px;padding:6px 14px;transition:.15s}
+nav.toc a:hover{background:var(--ink);color:var(--paper)}
+
+/* ---- section ---- */
+section{margin-top:52px;scroll-margin-top:16px}
+h2{font-size:21px;font-weight:700;display:flex;align-items:center;gap:12px;line-height:1.4}
+h2 .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);
+ font-size:14px;display:grid;place-items:center;font-weight:700}
+h2 .sub{font-size:12.5px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+h3{font-size:16px;font-weight:700;margin:26px 0 10px}
+p{margin:12px 0;max-width:74ch}
+.small{font-size:13px;color:var(--muted)}
+strong{font-weight:700}
+a{color:var(--sage)}
+
+/* ---- cards ---- */
+.grid{display:grid;gap:14px;margin-top:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+ padding:20px;box-shadow:var(--shadow)}
+.card.tint{background:var(--sand);box-shadow:none}
+.card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card.dark .ct,.card.dark p{color:var(--muted2)}
+.ch{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ch .dot{flex:none;width:24px;height:24px;border-radius:50%;background:var(--brass);color:var(--ink);
+ font-size:12px;font-weight:700;display:grid;place-items:center}
+.ct{font-size:13.5px;color:var(--ink2);line-height:1.8}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:480px}
+th{background:var(--sand);text-align:left;font-weight:700;padding:11px 14px;
+ border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px;letter-spacing:.03em}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.75}
+tr:last-child td{border-bottom:none}
+td.num,th.num{width:44px;text-align:center;color:var(--muted);white-space:nowrap}
+.fill{display:inline-block;min-width:110px;border-bottom:1px dashed var(--muted2);height:1.3em}
+
+/* ---- callouts ---- */
+.note{margin-top:18px;border-radius:var(--r);padding:16px 18px;font-size:13.5px;line-height:1.8;
+ background:var(--sand2);border:1px solid var(--line)}
+.note.brass{background:#FAF4EA;border-color:#E8D5B8}
+.note.warn{background:#FBF3F0;border-color:#E4CCC4}
+.note.sage{background:#F0F3EF;border-color:#D2DBD0}
+.note .nt{font-weight:700;display:block;margin-bottom:5px;font-size:13px;letter-spacing:.03em}
+.note.brass .nt{color:#9A7440}.note.warn .nt{color:#8F4B3B}.note.sage .nt{color:var(--sage)}
+
+/* ---- flow ---- */
+.flow{margin-top:20px;display:grid;gap:0}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;
+ box-shadow:var(--shadow)}
+.fstep.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fstep.ink .fd{color:var(--muted2)}
+.fstep .fl{font-size:11px;letter-spacing:.12em;color:var(--brass);margin-bottom:5px}
+.fstep .fh{font-weight:700;font-size:16px}
+.fstep .fd{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.75}
+.arrow{justify-self:center;color:var(--brass);font-size:19px;line-height:1;padding:9px 0}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---- chips / steps ---- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.chip{background:var(--sand);border-radius:999px;padding:7px 15px;font-size:13px}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.br{background:var(--brass);color:var(--ink);font-weight:700}
+
+/* ---- phase timeline ---- */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.ph{border-radius:var(--r);padding:16px;background:var(--card);border:1px solid var(--line)}
+.ph .pn{font-size:11px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.ph .pt{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.ph .pd{font-size:12.5px;color:var(--ink2);line-height:1.75}
+.ph.p1{background:var(--sage);color:#fff;border-color:var(--sage)}
+.ph.p1 .pd,.ph.p1 .pn{color:#DCE4DA}
+.ph.p2{background:var(--sageL);border-color:var(--sageL)}
+.ph.p3{background:var(--sand);border-color:var(--sand)}
+.ph.p4{background:var(--sand2)}
+
+/* ---- checklist ---- */
+ul.check{list-style:none;margin-top:14px;display:grid;gap:9px}
+ul.check li{background:var(--card);border:1px solid var(--line);border-radius:11px;
+ padding:13px 16px 13px 44px;position:relative;font-size:14px;line-height:1.7}
+ul.check li:before{content:"";position:absolute;left:16px;top:16px;width:15px;height:15px;
+ border:1.6px solid var(--muted2);border-radius:4px}
+ul.bul{margin:12px 0 0 20px;display:grid;gap:7px;font-size:14px}
+ul.bul li{line-height:1.8}
+ol.steps{margin:14px 0 0 0;list-style:none;counter-reset:s;display:grid;gap:11px}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;font-size:14px;line-height:1.8}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:1px;width:27px;height:27px;
+ border-radius:50%;background:var(--sand);color:var(--ink);font-size:13px;font-weight:700;
+ display:grid;place-items:center}
+
+/* ---- misc ---- */
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.kpi .k{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:18px 20px}
+.kpi .kv{font-size:27px;font-weight:700;line-height:1.25}
+.kpi .kl{font-size:12px;color:var(--muted2);margin-top:5px}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:5px;background:var(--sand);
+ color:var(--ink2);margin-right:5px;white-space:nowrap}
+.tag.br{background:var(--brass);color:var(--ink);font-weight:700}
+.tag.sg{background:var(--sage);color:#fff}
+.tag.tr{background:var(--terra);color:#fff}
+footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
+ font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.backlink{display:inline-block;margin-top:24px;font-size:13px;color:var(--muted);text-decoration:none}
+.backlink:hover{color:var(--ink)}
+
+@media(max-width:760px){
+ body{font-size:14.5px}
+ .wrap{padding:0 15px 70px}
+ header.top{padding:30px 0 20px}
+ .g2,.g3,.g4,.phases,.kpi,.branch{grid-template-columns:1fr}
+ section{margin-top:38px}
+ h2{font-size:18.5px}
+}
+@media print{
+ body{background:#fff} nav.toc{display:none} .card,.tw{box-shadow:none}
+ section{break-inside:avoid} .backlink{display:none}
+}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+<span class="eyebrow">PHERE ／ AI導入プロジェクト</span>
+<h1>資料一覧</h1>
+<p class="lead">美容室PHERE（学芸大学）向け AI勉強会の資料です。読みたいものを選んでください。</p>
+<p class="meta">最終更新：2026年8月13日　作成：Fable</p>
+<div class="rule"></div>
+</header>
+
+<style>
+.dl{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+a.dc{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;
+ padding:20px 22px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:.16s}
+a.dc:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(154,150,138,.24)}
+a.dc .dn{font-size:11px;letter-spacing:.14em;color:var(--brass);font-weight:700}
+a.dc .dt{font-size:17px;font-weight:700;margin:6px 0 7px;line-height:1.45}
+a.dc .dd{font-size:13px;color:var(--ink2);line-height:1.75}
+a.dc .dw{font-size:11.5px;color:var(--muted);margin-top:10px}
+a.dc.mst{background:#F7F1EF;border-color:#E4CCC4}
+a.dc.mst .dn{color:#8F2F22}
+.gh{font-size:12px;letter-spacing:.14em;color:var(--muted);margin:44px 0 2px;font-weight:700}
+.ext{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+a.ec{display:block;background:var(--ink);color:#F2EFE9;border-radius:13px;padding:17px 19px;
+ text-decoration:none;transition:.16s}
+a.ec:hover{background:#37372F}
+a.ec .et{font-weight:700;font-size:15px}
+a.ec .ed{font-size:12px;color:#B4B0A4;margin-top:5px;line-height:1.6}
+@media(max-width:760px){.dl,.ext{grid-template-columns:1fr}}
+</style>
+
+<div class="note brass"><span class="nt">この一覧について</span>
+これまでテキスト（.md）で管理していた資料を、そのままの内容で読みやすいHTMLに整えたものです。スマホでもPCでも開けます。印刷にも対応しています。</div>
+<div class="dl"><a class="dc " href="00_readme.html"><div class="dn">00</div><div class="dt">準備キット README</div><div class="dd">資料の全体像と、どれをいつ使うか。</div><div class="dw">全体像</div></a><a class="dc " href="07_hearing_sheet.html"><div class="dn">07</div><div class="dt">第0回ヒアリングシート</div><div class="dd">数字・契約・デジタル資産の棚卸し。D-2が最重要。</div><div class="dw">第0回で使う</div></a><a class="dc " href="08_agenda.html"><div class="dn">08</div><div class="dt">第1回 進行台本</div><div class="dd">45分のタイムテーブルと、その場で決める3つ。</div><div class="dw">当日・前日読み</div></a><a class="dc " href="09_workflow.html"><div class="dn">09</div><div class="dt">写真→自動反映ワークフロー</div><div class="dd">写真1枚がHPとインスタに届くまでの全体図。</div><div class="dw">当日提示</div></a><a class="dc " href="10_web_assets.html"><div class="dn">10</div><div class="dt">Web資産の棚卸し</div><div class="dd">phere-hair.com の管理情報と、安全に触る手順。</div><div class="dw">当日提示</div></a><a class="dc " href="03_instagram_calendar.html"><div class="dn">03</div><div class="dt">Instagram 30日カレンダー</div><div class="dd">週4回の型と、そのまま使えるキャプション5本。</div><div class="dw">第3回 教材</div></a><a class="dc " href="04_review_reply.html"><div class="dn">04</div><div class="dt">Google口コミ戦略</div><div class="dd">依頼オペレーションとAI返信デモ5例。</div><div class="dw">第2回 教材</div></a><a class="dc " href="05_line_plan.html"><div class="dn">05</div><div class="dt">LINE公式アカウント設計図</div><div class="dd">再来装置としての設計。配信は来店日起点で。</div><div class="dw">第4回 教材</div></a><a class="dc " href="16_drive_structure.html"><div class="dn">16</div><div class="dt">Googleドライブ構成設計</div><div class="dd">見せるのは「写真ポスト」1フォルダだけ。</div><div class="dw">ドライブ整備</div></a><a class="dc " href="18_api_setup.html"><div class="dn">18</div><div class="dt">APIキー発行手順</div><div class="dd">カード不要・課金経路なし。モデルの現行設定も。</div><div class="dw">勉強会前に実施</div></a></div>
+
+<div class="gh">動くもの（公開URL）</div>
+<div class="ext">
+<a class="ec" href="https://skmofu.github.io/phere-post-assistant/01.html"><div class="et">01　HP改善案</div>
+ <div class="ed">現状 ⇄ 改善後をトグルで見比べる</div></a>
+<a class="ec" href="https://skmofu.github.io/phere-post-assistant/02.html"><div class="et">02　売上シミュレーター</div>
+ <div class="ed">レバーを動かすと数字が変わる</div></a>
+<a class="ec" href="https://skmofu.github.io/phere-post-assistant/12.html"><div class="et">12　インスタ投稿デモ</div>
+ <div class="ed">写真を選ぶと下書きが3案</div></a>
+</div>
+<p class="small" style="margin-top:12px">17番（本番の投稿アシスタント）は、キー付きリンクのため当日その場でQRからお渡しします。このページを含め、すべて検索には出ない設定です。</p>
+
+
+<footer><span>美容室PHERE ／ AI導入プロジェクト</span><span>作成：Fable</span></footer>
+</div></body></html>

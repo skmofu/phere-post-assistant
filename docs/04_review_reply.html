@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Google口コミ戦略＋AI返信デモ｜PHERE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --ink:#2B2B28; --ink2:#4A473F; --paper:#FBFAF7; --card:#FFFFFF;
+ --sand:#EFECE5; --sand2:#F5F2EC; --line:#E2DED4;
+ --muted:#8A8577; --muted2:#B4B0A4;
+ --brass:#C89F6B; --terra:#B5402F; --sage:#4A5A42; --sageL:#B9C0B8;
+ --r:14px; --shadow:0 2px 14px rgba(154,150,138,.16);
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+ font-family:'Hiragino Kaku Gothic ProN','Zen Kaku Gothic New','Yu Gothic Medium',sans-serif;
+ font-size:15px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 100px}
+
+/* ---- header ---- */
+header.top{padding:48px 0 30px}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;color:var(--brass);
+ border:1px solid var(--brass);border-radius:999px;padding:4px 13px;margin-bottom:18px}
+h1{font-size:clamp(25px,4.6vw,37px);line-height:1.35;letter-spacing:.01em;font-weight:700}
+.lead{margin-top:14px;color:var(--ink2);font-size:15px;max-width:62ch}
+.meta{margin-top:16px;font-size:12px;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:30px 0 0}
+
+/* ---- toc ---- */
+nav.toc{margin:26px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{font-size:12.5px;color:var(--ink2);text-decoration:none;background:var(--sand);
+ border-radius:999px;padding:6px 14px;transition:.15s}
+nav.toc a:hover{background:var(--ink);color:var(--paper)}
+
+/* ---- section ---- */
+section{margin-top:52px;scroll-margin-top:16px}
+h2{font-size:21px;font-weight:700;display:flex;align-items:center;gap:12px;line-height:1.4}
+h2 .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);
+ font-size:14px;display:grid;place-items:center;font-weight:700}
+h2 .sub{font-size:12.5px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+h3{font-size:16px;font-weight:700;margin:26px 0 10px}
+p{margin:12px 0;max-width:74ch}
+.small{font-size:13px;color:var(--muted)}
+strong{font-weight:700}
+a{color:var(--sage)}
+
+/* ---- cards ---- */
+.grid{display:grid;gap:14px;margin-top:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+ padding:20px;box-shadow:var(--shadow)}
+.card.tint{background:var(--sand);box-shadow:none}
+.card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card.dark .ct,.card.dark p{color:var(--muted2)}
+.ch{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ch .dot{flex:none;width:24px;height:24px;border-radius:50%;background:var(--brass);color:var(--ink);
+ font-size:12px;font-weight:700;display:grid;place-items:center}
+.ct{font-size:13.5px;color:var(--ink2);line-height:1.8}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:480px}
+th{background:var(--sand);text-align:left;font-weight:700;padding:11px 14px;
+ border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px;letter-spacing:.03em}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.75}
+tr:last-child td{border-bottom:none}
+td.num,th.num{width:44px;text-align:center;color:var(--muted);white-space:nowrap}
+.fill{display:inline-block;min-width:110px;border-bottom:1px dashed var(--muted2);height:1.3em}
+
+/* ---- callouts ---- */
+.note{margin-top:18px;border-radius:var(--r);padding:16px 18px;font-size:13.5px;line-height:1.8;
+ background:var(--sand2);border:1px solid var(--line)}
+.note.brass{background:#FAF4EA;border-color:#E8D5B8}
+.note.warn{background:#FBF3F0;border-color:#E4CCC4}
+.note.sage{background:#F0F3EF;border-color:#D2DBD0}
+.note .nt{font-weight:700;display:block;margin-bottom:5px;font-size:13px;letter-spacing:.03em}
+.note.brass .nt{color:#9A7440}.note.warn .nt{color:#8F4B3B}.note.sage .nt{color:var(--sage)}
+
+/* ---- flow ---- */
+.flow{margin-top:20px;display:grid;gap:0}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;
+ box-shadow:var(--shadow)}
+.fstep.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fstep.ink .fd{color:var(--muted2)}
+.fstep .fl{font-size:11px;letter-spacing:.12em;color:var(--brass);margin-bottom:5px}
+.fstep .fh{font-weight:700;font-size:16px}
+.fstep .fd{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.75}
+.arrow{justify-self:center;color:var(--brass);font-size:19px;line-height:1;padding:9px 0}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---- chips / steps ---- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.chip{background:var(--sand);border-radius:999px;padding:7px 15px;font-size:13px}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.br{background:var(--brass);color:var(--ink);font-weight:700}
+
+/* ---- phase timeline ---- */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.ph{border-radius:var(--r);padding:16px;background:var(--card);border:1px solid var(--line)}
+.ph .pn{font-size:11px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.ph .pt{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.ph .pd{font-size:12.5px;color:var(--ink2);line-height:1.75}
+.ph.p1{background:var(--sage);color:#fff;border-color:var(--sage)}
+.ph.p1 .pd,.ph.p1 .pn{color:#DCE4DA}
+.ph.p2{background:var(--sageL);border-color:var(--sageL)}
+.ph.p3{background:var(--sand);border-color:var(--sand)}
+.ph.p4{background:var(--sand2)}
+
+/* ---- checklist ---- */
+ul.check{list-style:none;margin-top:14px;display:grid;gap:9px}
+ul.check li{background:var(--card);border:1px solid var(--line);border-radius:11px;
+ padding:13px 16px 13px 44px;position:relative;font-size:14px;line-height:1.7}
+ul.check li:before{content:"";position:absolute;left:16px;top:16px;width:15px;height:15px;
+ border:1.6px solid var(--muted2);border-radius:4px}
+ul.bul{margin:12px 0 0 20px;display:grid;gap:7px;font-size:14px}
+ul.bul li{line-height:1.8}
+ol.steps{margin:14px 0 0 0;list-style:none;counter-reset:s;display:grid;gap:11px}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;font-size:14px;line-height:1.8}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:1px;width:27px;height:27px;
+ border-radius:50%;background:var(--sand);color:var(--ink);font-size:13px;font-weight:700;
+ display:grid;place-items:center}
+
+/* ---- misc ---- */
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.kpi .k{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:18px 20px}
+.kpi .kv{font-size:27px;font-weight:700;line-height:1.25}
+.kpi .kl{font-size:12px;color:var(--muted2);margin-top:5px}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:5px;background:var(--sand);
+ color:var(--ink2);margin-right:5px;white-space:nowrap}
+.tag.br{background:var(--brass);color:var(--ink);font-weight:700}
+.tag.sg{background:var(--sage);color:#fff}
+.tag.tr{background:var(--terra);color:#fff}
+footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
+ font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.backlink{display:inline-block;margin-top:24px;font-size:13px;color:var(--muted);text-decoration:none}
+.backlink:hover{color:var(--ink)}
+
+@media(max-width:760px){
+ body{font-size:14.5px}
+ .wrap{padding:0 15px 70px}
+ header.top{padding:30px 0 20px}
+ .g2,.g3,.g4,.phases,.kpi,.branch{grid-template-columns:1fr}
+ section{margin-top:38px}
+ h2{font-size:18.5px}
+}
+@media print{
+ body{background:#fff} nav.toc{display:none} .card,.tw{box-shadow:none}
+ section{break-inside:avoid} .backlink{display:none}
+}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+<span class="eyebrow">04 ／ Google口コミ戦略</span>
+<h1>いただいた言葉を、<br>地図の上でも届ける。</h1>
+<p class="lead">HPBに集まった口コミ5.00×71件という資産を、Googleマップでも同じように見えるようにします。返信の下書きはAI、最後のOKは人。</p>
+<p class="meta">第2回教材　最終更新：2026-08-13</p>
+<div class="rule"></div>
+</header>
+
+<style>
+.rev{display:grid;gap:0;margin-top:14px}
+.rev .q{background:var(--sand);border-radius:12px 12px 12px 3px;padding:15px 18px;font-size:14px;
+ line-height:1.85;color:var(--ink2);position:relative}
+.rev .stars{font-size:12px;color:var(--brass);letter-spacing:.14em;margin-bottom:6px;font-weight:700}
+.rev .a{background:var(--ink);color:#F2EFE9;border-radius:12px 12px 3px 12px;padding:16px 19px;
+ font-size:13.5px;line-height:1.95;margin:9px 0 0 26px}
+.rev .a .al{font-size:11px;letter-spacing:.12em;color:var(--brass);display:block;margin-bottom:6px}
+.card.ng{background:#FBF3F0;border-color:#E4CCC4}
+.card.ng .ch{color:#8F4B3B}
+pre.cap{background:var(--ink);color:#F2EFE9;border-radius:12px;padding:18px 20px;font-size:12.5px;
+ line-height:2;white-space:pre-wrap;overflow-x:auto;margin-top:10px;
+ font-family:'Hiragino Kaku Gothic ProN',monospace}
+pre.card2{background:var(--sand);color:var(--ink);border-radius:10px;padding:15px 18px;font-size:13px;
+ white-space:pre-wrap;line-height:1.95;margin-top:10px}
+.goal{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.goal .gg{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+.goal .gv{font-size:24px;font-weight:700;color:var(--sage)}
+.goal .gl{font-size:12px;color:var(--muted);margin-top:4px}
+.goal .gm{font-size:11px;color:var(--brass);letter-spacing:.08em;font-weight:700}
+@media(max-width:760px){.goal{grid-template-columns:1fr}.rev .a{margin-left:0}}
+</style>
+
+<nav class="toc">
+<a href="#todo">当日のToDo</a><a href="#irai">口コミ依頼</a><a href="#demo">AI返信デモ</a>
+<a href="#prompt">プロンプト</a><a href="#rule">運用ルール</a>
+</nav>
+
+<div class="note brass"><span class="nt">出発点はここ</span>
+HPBに集まった<strong>口コミ 5.00 × 71件</strong>という素晴らしい資産があります。これを地図検索（Googleマップ）でも同じように輝かせるのが今回の目的です。「学芸大学 美容室」で地図を開く徒歩圏の住民が、いちばん先に触れる面がGoogleだからです。</div>
+
+<section id="todo">
+<h2><span class="n">1</span><span>最初にやること<span class="sub">　第2回当日のToDo</span></span></h2>
+<ul class="check">
+<li><strong>Googleビジネスプロフィールのオーナー確認</strong>（未確認なら最優先。ハガキ／電話／動画認証）</li>
+<li>基本情報を完全入力：営業時間・火曜定休・写真10枚以上・属性（完全予約制）・予約リンク</li>
+<li>カテゴリ：メイン「美容院」＋サブ「ヘアサロン」</li>
+<li>説明文にキーワードを自然に：学芸大学駅徒歩1分／完全予約制／メンズパーマ／透明感カラー／ヘッドスパ</li>
+</ul>
+</section>
+
+<section id="irai">
+<h2><span class="n">2</span><span>口コミ依頼のオペレーション</span></h2>
+
+<h3>タイミングとトーク</h3>
+<p>会計時、仕上がりを喜んでいただけた流れで。そのまま使えます。</p>
+<div class="card tint" style="font-size:15px;line-height:1.95">
+「もしよろしければ、Googleの口コミにご協力いただけると嬉しいです。<br>こちらのQRコードから30秒ほどで書けます」
+</div>
+
+<h3>QRカードの文面案（名刺サイズ・レジ横）</h3>
+<pre class="card2">本日はご来店ありがとうございました。
+よろしければ、感想をお聞かせください。
+（QRコード：Google口コミ投稿ページ直リンク）
+PHERE｜学芸大学駅徒歩1分</pre>
+
+<h3>やってはいけないこと</h3>
+<div class="grid g3">
+<div class="card ng"><div class="ch">謝礼・割引と引き換え</div><div class="ct">Googleのポリシー違反。表示が止まるリスクがあります。</div></div>
+<div class="card ng"><div class="ch">自作自演</div><div class="ct">身内での投稿も同様に扱われます。</div></div>
+<div class="card ng"><div class="ch">削除依頼の乱発</div><div class="ct">あくまで「お願い」まで。返信で誠実に応えるほうが効きます。</div></div>
+</div>
+
+<h3>目標</h3>
+<div class="goal">
+ <div class="gg"><div class="gm">MONTHLY</div><div class="gv">月10件</div><div class="gl">お願いするペース</div></div>
+ <div class="gg"><div class="gm">3 MONTHS</div><div class="gv">30件</div><div class="gl">3ヶ月後の累計</div></div>
+ <div class="gg"><div class="gm">RATING</div><div class="gv">4.8 以上</div><div class="gl">学大の地図面で最上位クラス</div></div>
+</div>
+</section>
+
+<section id="demo">
+<h2><span class="n">3</span><span>AI返信デモ<span class="sub">　Before / After</span></span></h2>
+<p class="small">以下はデモ用のサンプルです（実在の口コミではありません）。勉強会では、実際に届いた口コミをその場でAIに貼って返信を作ります。</p>
+
+<h3>サンプル① ★5（女性・カラー）</h3>
+<div class="rev">
+<div class="q"><span class="stars">★★★★★</span>初めて伺いましたが、カウンセリングが丁寧で安心できました。仕上がりの色も理想通り。静かな空間でゆっくりできました。</div>
+<div class="a"><span class="al">AI 返信案</span>このたびはPHEREにご来店いただき、ありがとうございます。カラーの仕上がりを気に入っていただけて、スタッフ一同とても嬉しく思います。当店はセット面4席の完全予約制ですので、次回もごゆっくりお過ごしいただけるよう準備してお待ちしております。学芸大学へお越しの際は、ぜひまたお立ち寄りください。</div>
+</div>
+
+<h3>サンプル② ★5（男性・パーマ）</h3>
+<div class="rev">
+<div class="q"><span class="stars">★★★★★</span>パーマ初挑戦でしたが、朝のセット方法まで教えてもらえて助かりました。翌日も自分で再現できました。</div>
+<div class="a"><span class="al">AI 返信案</span>初めてのパーマ、お任せいただきありがとうございました。翌朝ご自身で再現できたと伺い、担当の河野も喜んでおります。スタイリングで気になる点が出てきましたら、次回のご来店時はもちろん、いつでもお気軽にご相談ください。またのお越しをお待ちしております。</div>
+</div>
+
+<h3>サンプル③ ★5（女性・ヘッドスパ）</h3>
+<div class="rev">
+<div class="q"><span class="stars">★★★★★</span>ヘッドスパが気持ちよすぎて寝てしまいました。月1の楽しみになりそうです。</div>
+<div class="a"><span class="al">AI 返信案</span>心地よくお休みいただけたようで何よりです。ヘッドスパは頭皮の状態に合わせて毎回調整しておりますので、「月に一度の整う時間」としてぜひご活用ください。季節の変わり目は頭皮も揺らぎやすい時期です。次回のご来店もお待ちしております。</div>
+</div>
+
+<h3>サンプル④ ★4（軽い要望つき）</h3>
+<div class="rev">
+<div class="q"><span class="stars">★★★★☆</span>技術は文句なしです。ただ人気なのか、希望日の予約が取りづらいことがあります。</div>
+<div class="a"><span class="al">AI 返信案</span>ご来店と率直なご意見をありがとうございます。少人数の完全予約制のため、ご希望に沿えないことがあり申し訳ありません。お帰りの際に次回分をご予約いただけますと、ご希望のお時間をお取りしやすくなります。今後もご期待に添えるよう努めてまいります。</div>
+</div>
+
+<h3>サンプル⑤ ★3（不満あり・最重要ケース）</h3>
+<div class="rev">
+<div class="q"><span class="stars">★★★☆☆</span>仕上がりは良かったが、思ったより時間がかかった。</div>
+<div class="a"><span class="al">AI 返信案</span>このたびは貴重なご指摘をありがとうございます。仕上がりにご満足いただけた一方で、お時間の面でご負担をおかけし申し訳ありませんでした。カウンセリング時に所要時間の目安をより丁寧にお伝えするよう改善いたします。次回はご予定に合わせた進行をご提案させてください。またのご来店を心よりお待ちしております。</div>
+</div>
+
+<h3>ポイント解説（勉強会で話すこと）</h3>
+<div class="grid g3">
+<div class="card"><div class="ch"><span class="dot">1</span>返信も検索に効く</div>
+ <div class="ct">「学芸大学」「メニュー名」「完全予約制」を自然に入れる。返信そのものが検索の対象になります。</div></div>
+<div class="card"><div class="ch"><span class="dot">2</span>低評価ほど丁寧に</div>
+ <div class="ct">これから来る方は「低評価への返し方」を見てお店を判断します。ここがいちばん見られています。</div></div>
+<div class="card"><div class="ch"><span class="dot">3</span>個人が分かることは書かない</div>
+ <div class="ct">施術日・氏名などは入れません。</div></div>
+</div>
+</section>
+
+<section id="prompt">
+<h2><span class="n">4</span><span>店長AI 返信プロンプト<span class="sub">　コピペ用</span></span></h2>
+<pre class="cap">あなたは東京・学芸大学の美容室「PHERE」の店主です。
+以下のGoogle口コミに120〜180字で返信してください。
+トーン：丁寧・温かい・卑屈にならない・絵文字なし。
+含める要素：感謝／口コミ内容への具体的な言及／
+可能なら「学芸大学」「完全予約制」「メニュー名」のいずれかを自然に1つ／再来店への一言。
+低評価の場合：言い訳をせず、事実確認できない断定を避け、改善姿勢と再来のご案内。
+禁止：割引の約束、医療的効能の断定、他のお客様への言及。
+
+口コミ（★n）：［ここに貼る］</pre>
+</section>
+
+<section id="rule">
+<h2><span class="n">5</span><span>運用ルール</span></h2>
+<div class="tw"><table>
+<tr><th>項目</th><th>ルール</th></tr>
+<tr><td><strong>返信期限</strong></td><td>48時間以内（AI下書き→承認で1件30秒）</td></tr>
+<tr><td><strong>返信率</strong></td><td>100%（★の数にかかわらず全件）</td></tr>
+<tr><td><strong>担当</strong></td><td>通知を受けた人がAIに貼る → もう1人が読んで投稿（ダブルチェック）</td></tr>
+<tr><td><strong>月次</strong></td><td>口コミ内容をAIで要約し「褒められた点／指摘された点」を月1でレビュー</td></tr>
+</table></div>
+</section>
+
+<a class="backlink" href="index.html">← 資料一覧にもどる</a>
+<footer><span>美容室PHERE ／ AI導入プロジェクト</span><span>作成：Fable</span></footer>
+</div></body></html>

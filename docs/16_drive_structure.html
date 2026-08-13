@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>PHERE用 Googleドライブ 構成設計｜PHERE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --ink:#2B2B28; --ink2:#4A473F; --paper:#FBFAF7; --card:#FFFFFF;
+ --sand:#EFECE5; --sand2:#F5F2EC; --line:#E2DED4;
+ --muted:#8A8577; --muted2:#B4B0A4;
+ --brass:#C89F6B; --terra:#B5402F; --sage:#4A5A42; --sageL:#B9C0B8;
+ --r:14px; --shadow:0 2px 14px rgba(154,150,138,.16);
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+ font-family:'Hiragino Kaku Gothic ProN','Zen Kaku Gothic New','Yu Gothic Medium',sans-serif;
+ font-size:15px;line-height:1.85;-webkit-text-size-adjust:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:0 20px 100px}
+
+/* ---- header ---- */
+header.top{padding:48px 0 30px}
+.eyebrow{display:inline-block;font-size:11px;letter-spacing:.16em;color:var(--brass);
+ border:1px solid var(--brass);border-radius:999px;padding:4px 13px;margin-bottom:18px}
+h1{font-size:clamp(25px,4.6vw,37px);line-height:1.35;letter-spacing:.01em;font-weight:700}
+.lead{margin-top:14px;color:var(--ink2);font-size:15px;max-width:62ch}
+.meta{margin-top:16px;font-size:12px;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:30px 0 0}
+
+/* ---- toc ---- */
+nav.toc{margin:26px 0 8px;display:flex;flex-wrap:wrap;gap:8px}
+nav.toc a{font-size:12.5px;color:var(--ink2);text-decoration:none;background:var(--sand);
+ border-radius:999px;padding:6px 14px;transition:.15s}
+nav.toc a:hover{background:var(--ink);color:var(--paper)}
+
+/* ---- section ---- */
+section{margin-top:52px;scroll-margin-top:16px}
+h2{font-size:21px;font-weight:700;display:flex;align-items:center;gap:12px;line-height:1.4}
+h2 .n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);
+ font-size:14px;display:grid;place-items:center;font-weight:700}
+h2 .sub{font-size:12.5px;color:var(--muted);font-weight:400;letter-spacing:.02em}
+h3{font-size:16px;font-weight:700;margin:26px 0 10px}
+p{margin:12px 0;max-width:74ch}
+.small{font-size:13px;color:var(--muted)}
+strong{font-weight:700}
+a{color:var(--sage)}
+
+/* ---- cards ---- */
+.grid{display:grid;gap:14px;margin-top:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+ padding:20px;box-shadow:var(--shadow)}
+.card.tint{background:var(--sand);box-shadow:none}
+.card.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.card.dark .ct,.card.dark p{color:var(--muted2)}
+.ch{font-weight:700;font-size:15.5px;display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.ch .dot{flex:none;width:24px;height:24px;border-radius:50%;background:var(--brass);color:var(--ink);
+ font-size:12px;font-weight:700;display:grid;place-items:center}
+.ct{font-size:13.5px;color:var(--ink2);line-height:1.8}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:480px}
+th{background:var(--sand);text-align:left;font-weight:700;padding:11px 14px;
+ border-bottom:1px solid var(--line);white-space:nowrap;font-size:12.5px;letter-spacing:.03em}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.75}
+tr:last-child td{border-bottom:none}
+td.num,th.num{width:44px;text-align:center;color:var(--muted);white-space:nowrap}
+.fill{display:inline-block;min-width:110px;border-bottom:1px dashed var(--muted2);height:1.3em}
+
+/* ---- callouts ---- */
+.note{margin-top:18px;border-radius:var(--r);padding:16px 18px;font-size:13.5px;line-height:1.8;
+ background:var(--sand2);border:1px solid var(--line)}
+.note.brass{background:#FAF4EA;border-color:#E8D5B8}
+.note.warn{background:#FBF3F0;border-color:#E4CCC4}
+.note.sage{background:#F0F3EF;border-color:#D2DBD0}
+.note .nt{font-weight:700;display:block;margin-bottom:5px;font-size:13px;letter-spacing:.03em}
+.note.brass .nt{color:#9A7440}.note.warn .nt{color:#8F4B3B}.note.sage .nt{color:var(--sage)}
+
+/* ---- flow ---- */
+.flow{margin-top:20px;display:grid;gap:0}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;
+ box-shadow:var(--shadow)}
+.fstep.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fstep.ink .fd{color:var(--muted2)}
+.fstep .fl{font-size:11px;letter-spacing:.12em;color:var(--brass);margin-bottom:5px}
+.fstep .fh{font-weight:700;font-size:16px}
+.fstep .fd{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.75}
+.arrow{justify-self:center;color:var(--brass);font-size:19px;line-height:1;padding:9px 0}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---- chips / steps ---- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.chip{background:var(--sand);border-radius:999px;padding:7px 15px;font-size:13px}
+.chip.on{background:var(--ink);color:var(--paper)}
+.chip.br{background:var(--brass);color:var(--ink);font-weight:700}
+
+/* ---- phase timeline ---- */
+.phases{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.ph{border-radius:var(--r);padding:16px;background:var(--card);border:1px solid var(--line)}
+.ph .pn{font-size:11px;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.ph .pt{font-weight:700;font-size:14.5px;margin-bottom:6px}
+.ph .pd{font-size:12.5px;color:var(--ink2);line-height:1.75}
+.ph.p1{background:var(--sage);color:#fff;border-color:var(--sage)}
+.ph.p1 .pd,.ph.p1 .pn{color:#DCE4DA}
+.ph.p2{background:var(--sageL);border-color:var(--sageL)}
+.ph.p3{background:var(--sand);border-color:var(--sand)}
+.ph.p4{background:var(--sand2)}
+
+/* ---- checklist ---- */
+ul.check{list-style:none;margin-top:14px;display:grid;gap:9px}
+ul.check li{background:var(--card);border:1px solid var(--line);border-radius:11px;
+ padding:13px 16px 13px 44px;position:relative;font-size:14px;line-height:1.7}
+ul.check li:before{content:"";position:absolute;left:16px;top:16px;width:15px;height:15px;
+ border:1.6px solid var(--muted2);border-radius:4px}
+ul.bul{margin:12px 0 0 20px;display:grid;gap:7px;font-size:14px}
+ul.bul li{line-height:1.8}
+ol.steps{margin:14px 0 0 0;list-style:none;counter-reset:s;display:grid;gap:11px}
+ol.steps li{counter-increment:s;position:relative;padding-left:42px;font-size:14px;line-height:1.8}
+ol.steps li:before{content:counter(s);position:absolute;left:0;top:1px;width:27px;height:27px;
+ border-radius:50%;background:var(--sand);color:var(--ink);font-size:13px;font-weight:700;
+ display:grid;place-items:center}
+
+/* ---- misc ---- */
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.kpi .k{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:18px 20px}
+.kpi .kv{font-size:27px;font-weight:700;line-height:1.25}
+.kpi .kl{font-size:12px;color:var(--muted2);margin-top:5px}
+.tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:5px;background:var(--sand);
+ color:var(--ink2);margin-right:5px;white-space:nowrap}
+.tag.br{background:var(--brass);color:var(--ink);font-weight:700}
+.tag.sg{background:var(--sage);color:#fff}
+.tag.tr{background:var(--terra);color:#fff}
+footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);
+ font-size:12px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.backlink{display:inline-block;margin-top:24px;font-size:13px;color:var(--muted);text-decoration:none}
+.backlink:hover{color:var(--ink)}
+
+@media(max-width:760px){
+ body{font-size:14.5px}
+ .wrap{padding:0 15px 70px}
+ header.top{padding:30px 0 20px}
+ .g2,.g3,.g4,.phases,.kpi,.branch{grid-template-columns:1fr}
+ section{margin-top:38px}
+ h2{font-size:18.5px}
+}
+@media print{
+ body{background:#fff} nav.toc{display:none} .card,.tw{box-shadow:none}
+ section{break-inside:avoid} .backlink{display:none}
+}
+</style></head>
+<body><div class="wrap">
+<header class="top">
+<span class="eyebrow">16 ／ Googleドライブ構成設計</span>
+<h1>見せるのは、<br>ひとつのフォルダだけ。</h1>
+<p class="lead">資料も、事前送付物も、写真の受け口も1アカウントに整理します。ただしお二人の画面に出るのは「写真ポスト」1つだけにします。</p>
+<p class="meta">ドライブ整備用　最終更新：2026-08-13</p>
+<div class="rule"></div>
+</header>
+
+<style>
+.tree{background:var(--ink);border-radius:14px;padding:22px 24px;margin-top:16px;overflow-x:auto}
+.tree .t{display:grid;grid-template-columns:auto 1fr;gap:0 14px;align-items:center;
+ padding:7px 0;border-bottom:1px solid #3A3A33;font-size:13.5px;color:#F2EFE9}
+.tree .t:last-child{border-bottom:none}
+.tree .nm{font-weight:700;white-space:nowrap;font-family:'Hiragino Kaku Gothic ProN',monospace}
+.tree .ds{font-size:12px;color:#B4B0A4;line-height:1.6}
+.tree .t.ind .nm{padding-left:22px;font-weight:400;color:#C8C4B8}
+.tree .t.share{background:#3B4436;margin:0 -24px;padding-left:24px;padding-right:24px;border-radius:2px}
+.tree .t.share .nm{color:#C9DCC2}
+.badge2{display:inline-block;font-size:10.5px;padding:2px 8px;border-radius:4px;margin-left:8px;
+ background:#C89F6B;color:#2B2B28;font-weight:700;letter-spacing:.04em;vertical-align:1px}
+.badge2.sg{background:#7FA36F;color:#1F2A1C}
+.badge2.gy{background:#4A4A42;color:#B4B0A4}
+</style>
+
+<nav class="toc">
+<a href="#tree">フォルダ構成</a><a href="#share">共有の設計</a><a href="#sec">セキュリティ</a><a href="#step">移行手順</a>
+</nav>
+
+<div class="note brass"><span class="nt">設計の狙い</span>
+①勉強会資料 ②事前送付物 ③SNS効率化の受け口 を1つのアカウントに整理しつつ、<strong>お二人に見せるのは10_写真ポストの1フォルダだけ</strong>にします。見えるものが少ないほど、迷いません。</div>
+
+<section id="tree">
+<h2><span class="n">1</span><span>フォルダ構成<span class="sub">　マイドライブ直下</span></span></h2>
+<div class="tree">
+<div class="t"><span class="nm">PHERE_AI/</span><span class="ds"></span></div>
+<div class="t"><span class="nm">├ 01_勉強会資料/</span><span class="ds">本キット 00〜18 の一式<span class="badge2 gy">マスターのみ</span></span></div>
+<div class="t"><span class="nm">├ 02_事前送付/</span><span class="ds">お二人へ送る最小セット（01・02・12・15）<span class="badge2 gy">マスターのみ</span></span></div>
+<div class="t share"><span class="nm">├ 10_写真ポスト/</span><span class="ds">唯一お二人と共有する運用フォルダ<span class="badge2 sg">編集者で共有</span></span></div>
+<div class="t ind"><span class="nm">│　├ サイト用/</span><span class="ds"></span></div>
+<div class="t ind"><span class="nm">│　├ インスタ用/</span><span class="ds"></span></div>
+<div class="t ind"><span class="nm">│　└ どちらでも/</span><span class="ds">迷ったらここ。ショートカットの既定の保存先</span></div>
+<div class="t"><span class="nm">├ 11_投稿済みアーカイブ/</span><span class="ds">処理後に自動で移動。重複防止の台帳も兼ねる</span></div>
+<div class="t"><span class="nm">├ 20_サイト素材/</span><span class="ds">ロゴ・JOURNAL用のリサイズ済み画像・SEO文言</span></div>
+<div class="t"><span class="nm">├ 30_インスタ運用/</span><span class="ds">投稿カレンダー・キャプションのストック・実績</span></div>
+<div class="t"><span class="nm">└ 90_運用ログ/</span><span class="ds">投稿台帳・月次レポート（自動生成）</span></div>
+</div>
+</section>
+
+<section id="share">
+<h2><span class="n">2</span><span>共有の設計<span class="sub">　迷いを最小に</span></span></h2>
+<div class="grid g2">
+<div class="card"><div class="ch"><span class="dot">1</span>共有するのは1つだけ</div>
+ <div class="ct">お二人の個人Googleアカウントには <strong>10_写真ポスト のみ「編集者」で共有</strong>。他は見せません。</div></div>
+<div class="card"><div class="ch"><span class="dot">2</span>リンク共有はOFF</div>
+ <div class="ct">全フォルダでリンク共有を切り、特定のユーザーのみに。</div></div>
+<div class="card"><div class="ch"><span class="dot">3</span>ショートカットを2台に</div>
+ <div class="ct">iPhoneの共有シートから使える「PHEREに送る」を設定（保存先＝10_写真ポスト／どちらでも）。ホーム画面にも追加すればアプリ同然です。</div></div>
+<div class="card"><div class="ch"><span class="dot">4</span>17番はファイルで渡さない</div>
+ <div class="ct">配布は<strong>公開URL＋キー付きリンク</strong>（Mac の <code>link.txt</code>）。当日その場でQR（<code>qr_17.html</code>）を見せて開いてもらいます。「ホーム画面に追加」でアプリ化。</div></div>
+</div>
+</section>
+
+<section id="sec">
+<h2><span class="n">3</span><span>新規アカウントのセキュリティ最低ライン</span></h2>
+<ul class="check">
+<li>2段階認証をON（認証アプリ推奨）／再設定用の連絡先＝マスター</li>
+<li>認証情報は紙で保管＋マスター側に暗号化した控え。平文のチャット共有はしない</li>
+<li>このアカウントを WordPress・Meta・LINE公式 の登録メールに順次そろえていく<br>
+ <span class="small">——お店の資産を、お店のアカウントに帰属させるため</span></li>
+</ul>
+</section>
+
+<section id="step">
+<h2><span class="n">4</span><span>移行手順<span class="sub">　マスター・15分</span></span></h2>
+<ol class="steps">
+<li>PHERE_AI/ 以下を上のツリーどおりに作成</li>
+<li>①②のファイルをダウンロード → 01_勉強会資料/ と 02_事前送付/ へ格納</li>
+<li>10_写真ポスト/ をお二人に共有（勉強会の当日でOK）</li>
+<li>ig_thumbs（実インスタの参照画像）を 30_インスタ運用/ へ</li>
+</ol>
+</section>
+
+<a class="backlink" href="index.html">← 資料一覧にもどる</a>
+<footer><span>美容室PHERE ／ AI導入プロジェクト</span><span>作成：Fable</span></footer>
+</div></body></html>
