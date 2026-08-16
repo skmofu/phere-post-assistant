@@ -217,20 +217,20 @@ pre.cmd{background:var(--ink);color:#F2EFE9;border-radius:10px;padding:14px 17px
 </section>
 
 <section id="model">
-<h2><span class="n">3</span><span>モデルの選び方<span class="sub">　8/13の実測にもとづく現行設定</span></span></h2>
+<h2><span class="n">3</span><span>モデルの選び方<span class="sub">　8/14更新・実写サイズでの再実測にもとづく現行設定</span></span></h2>
 <p>8月13日にお二人のキーで実測したところ、これまで使っていた <code>gemini-3.5-flash</code> が混雑していて、応答に9〜28秒かかり、混雑時には接続に失敗していました。そこで17番を<strong>3段構え</strong>に変更しています。</p>
 
 <div class="mchart">
-<div class="mrow pick"><span class="ml">gemini-3.6-flash</span><div class="mbar" style="width:10%"></div><span class="mv">2.6–3.0秒</span></div>
+<div class="mrow"><span class="ml">gemini-3.6-flash</span><div class="mbar" style="width:10%"></div><span class="mv">2.6–3.0秒</span></div>
 <div class="mrow"><span class="ml">gemini-flash-latest</span><div class="mbar" style="width:10%"></div><span class="mv">2.5–2.9秒</span></div>
-<div class="mrow"><span class="ml">gemini-3.1-flash-lite</span><div class="mbar" style="width:13%"></div><span class="mv">1.0–4.0秒</span></div>
+<div class="mrow pick"><span class="ml">gemini-3.1-flash-lite</span><div class="mbar" style="width:13%"></div><span class="mv">1.0–4.0秒</span></div>
 <div class="mrow slow"><span class="ml">gemini-3.5-flash</span><div class="mbar" style="width:93%"></div><span class="mv">9–28秒</span></div>
 </div>
 <div class="axis"><span>0秒</span><span>15秒</span><span>30秒</span></div>
 <p class="small">写真1枚＋短い指示で各3回×2セット、2026年8月13日 PHEREアカウント実測。<code>gemini-2.5-flash</code> は新規ユーザーへの提供が終了しています。</p>
 
 <div class="note sage"><span class="nt">17番の現行動作</span>
-<code>gemini-3.6-flash</code> → <code>gemini-flash-latest</code> → <code>gemini-3.5-flash</code> の順に試し、混雑（429／500／503）なら0.9秒待って1回だけやり直します。3つとも届かなかったときだけ、用意してある下書きに切り替わり、画面には落ち着いた日本語の案内が出ます。</div>
+<code>gemini-3.1-flash-lite</code> → <code>gemini-flash-latest</code> → <code>gemini-3.5-flash</code> の順に試し、8秒以内に返らないモデルは打ち切って次へ進みます。3つとも届かなかったときだけ、用意してある下書きに切り替わり、画面には落ち着いた日本語の案内が出ます。</div>
 <div class="note"><span class="nt">モデル名を変えたくなったら</span>
 17番の <code>MODELS</code> 配列を書き換えます。どのモデルも無料枠の範囲で、カード未登録である限り課金は発生しません。</div>
 </section>

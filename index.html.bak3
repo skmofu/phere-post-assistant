@@ -200,7 +200,7 @@ h2{font-weight:500;font-size:16.5px;letter-spacing:.16em}
 <script>
 var GEMINI_KEY='';  // ←PHEREアカウントで発行した無料キーを貼ると入力欄が消えます
 try{var _mk=location.hash.match(/[#&]k=([^&]+)/); if(!GEMINI_KEY&&_mk){GEMINI_KEY=decodeURIComponent(_mk[1]);}}catch(_e){}
-var MODELS=['gemini-3.1-flash-lite','gemini-flash-latest','gemini-3.5-flash'];var MODEL=MODELS[0];  // モデル名はAI Studioの現行表記に合わせて更新
+var MODELS=['gemini-3.6-flash','gemini-flash-latest','gemini-3.5-flash'];var MODEL=MODELS[0];  // モデル名はAI Studioの現行表記に合わせて更新
 var SIG='PHERE\n\n目黒区鷹番3-1-2アーク石田ビル2F\n[学芸大学駅 徒歩1分]';
 var TONES=['いつもの温度','ひとこと添える','すこし語る'];
 
@@ -254,8 +254,8 @@ $('file').onchange=function(e){
   var f=e.target.files[0]; if(!f) return;
   e.target.value='';
   $('up').innerHTML='<span style="letter-spacing:.18em;color:#9A968A;font-size:12px">写真を読み込んでいます…</span>';
-  function toCanvas(w,h,draw){var mx=800,r=Math.min(1,mx/Math.max(w,h));var cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(w*r));cv.height=Math.max(1,Math.round(h*r));draw(cv.getContext('2d'),cv.width,cv.height);return cv;}
-  function done(cv){imgURL=cv.toDataURL('image/jpeg',.8);imgB64=imgURL.split(',')[1];
+  function toCanvas(w,h,draw){var mx=1024,r=Math.min(1,mx/Math.max(w,h));var cv=document.createElement('canvas');cv.width=Math.max(1,Math.round(w*r));cv.height=Math.max(1,Math.round(h*r));draw(cv.getContext('2d'),cv.width,cv.height);return cv;}
+  function done(cv){imgURL=cv.toDataURL('image/jpeg',.85);imgB64=imgURL.split(',')[1];
     $('up').innerHTML='<img src="'+imgURL+'"><span class="re">変更</span>';
     if($('err1')){$('err1').classList.remove('on');}
     mode='photo';startGen();}
@@ -304,17 +304,20 @@ async function genReal(){
         generationConfig:{response_mime_type:'application/json',temperature:0.7}});
     var j=null,lastErr=null;
     for(var mi=0;mi<MODELS.length&&!j;mi++){
-      var ac=(typeof AbortController!=='undefined')?new AbortController():null;
-      var tm=ac?setTimeout((function(a){return function(){a.abort()}})(ac),8000):null;
-      try{
-        var rs=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+MODELS[mi]+':generateContent',{
-          method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':KEY},
-          body:payload,signal:ac?ac.signal:undefined});
-        var jj=await rs.json();
-        if(jj&&jj.error){ lastErr=new Error(jj.error.message||'api error'); }
-        else{ j=jj; }
-      }catch(ne){ lastErr=ne; }
-      finally{ if(tm)clearTimeout(tm); }
+      for(var at=0;at<2;at++){
+        try{
+          var rs=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+MODELS[mi]+':generateContent',{
+            method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':KEY},body:payload});
+          var jj=await rs.json();
+          if(jj&&jj.error){
+            lastErr=new Error(jj.error.message||'api error');
+            var cd=jj.error.code||rs.status||0;
+            if((cd===429||cd===500||cd===503)&&at===0){ await new Promise(function(r){setTimeout(r,900)}); continue; }
+            break;
+          }
+          j=jj; break;
+        }catch(ne){ lastErr=ne; if(at===0){ await new Promise(function(r){setTimeout(r,900)}); } }
+      }
     }
     if(!j) throw (lastErr||new Error('no response'));
     var txt=(((j.candidates||[])[0]||{}).content||{}).parts||[];
