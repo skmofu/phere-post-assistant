@@ -303,27 +303,19 @@ async function genReal(){
     var payload=JSON.stringify({contents:[{parts:[{inline_data:{mime_type:'image/jpeg',data:imgB64}},{text:prompt}]}],
         generationConfig:{response_mime_type:'application/json',temperature:0.7}});
     var j=null,lastErr=null;
-    function tryModel(m,ms){return new Promise(function(res){
+    for(var mi=0;mi<MODELS.length&&!j;mi++){
       var ac=(typeof AbortController!=='undefined')?new AbortController():null;
-      var tm=ac?setTimeout(function(){ac.abort()},ms):null;
-      fetch('https://generativelanguage.googleapis.com/v1beta/models/'+m+':generateContent',{
-        method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':KEY},
-        body:payload,signal:ac?ac.signal:undefined})
-      .then(function(rs){return rs.json()})
-      .then(function(jj){ if(tm)clearTimeout(tm);
-        if(jj&&jj.error){ lastErr=new Error(jj.error.message||'api error'); res(null); }
-        else{ res(jj); } })
-      .catch(function(ne){ if(tm)clearTimeout(tm); lastErr=ne; res(null); });
-    });}
-    function race2(a,b,ms){return new Promise(function(res){
-      var done=false,fails=0;
-      [a,b].forEach(function(m){ tryModel(m,ms).then(function(r){
-        if(done)return;
-        if(r){ done=true; res(r); }
-        else if(++fails===2){ res(null); } }); });
-    });}
-    j=await race2(MODELS[0],MODELS[1],8000);
-    if(!j){ j=await tryModel(MODELS[2],9000); }
+      var tm=ac?setTimeout((function(a){return function(){a.abort()}})(ac),8000):null;
+      try{
+        var rs=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+MODELS[mi]+':generateContent',{
+          method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':KEY},
+          body:payload,signal:ac?ac.signal:undefined});
+        var jj=await rs.json();
+        if(jj&&jj.error){ lastErr=new Error(jj.error.message||'api error'); }
+        else{ j=jj; }
+      }catch(ne){ lastErr=ne; }
+      finally{ if(tm)clearTimeout(tm); }
+    }
     if(!j) throw (lastErr||new Error('no response'));
     var txt=(((j.candidates||[])[0]||{}).content||{}).parts||[];
     txt=txt.map(function(p){return p.text||''}).join('').replace(/```json|```/g,'').trim();

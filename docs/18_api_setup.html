@@ -230,7 +230,7 @@ pre.cmd{background:var(--ink);color:#F2EFE9;border-radius:10px;padding:14px 17px
 <p class="small">写真1枚＋短い指示で各3回×2セット、2026年8月13日 PHEREアカウント実測。<code>gemini-2.5-flash</code> は新規ユーザーへの提供が終了しています。</p>
 
 <div class="note sage"><span class="nt">17番の現行動作</span>
-<code>gemini-3.1-flash-lite</code> → <code>gemini-flash-latest</code> → <code>gemini-3.5-flash</code> の順に試し、8秒以内に返らないモデルは打ち切って次へ進みます。3つとも届かなかったときだけ、用意してある下書きに切り替わり、画面には落ち着いた日本語の案内が出ます。</div>
+<code>gemini-3.1-flash-lite</code> と <code>gemini-flash-latest</code> に同時に依頼して速いほうを採用し、どちらも8秒で返らなければ <code>gemini-3.5-flash</code> に切り替えます。3つとも届かなかったときだけ、用意してある下書きに切り替わり、画面には落ち着いた日本語の案内が出ます。</div>
 <div class="note"><span class="nt">モデル名を変えたくなったら</span>
 17番の <code>MODELS</code> 配列を書き換えます。どのモデルも無料枠の範囲で、カード未登録である限り課金は発生しません。</div>
 </section>
